@@ -4,7 +4,7 @@ import { TransactionList } from '@/components/features/transaction-list'
 import type { TransactionWithUsers } from '@/types/database'
 
 export const metadata = {
-  title: 'Transaction History',
+  title: 'История транзакций',
 }
 
 export default async function HistoryPage() {
@@ -35,8 +35,8 @@ export default async function HistoryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Transaction History</h1>
-        <p className="text-gray-600">View all your coin transactions</p>
+        <h1 className="text-2xl font-bold text-gray-900">История транзакций</h1>
+        <p className="text-gray-600">Просмотрите все ваши операции с монетами</p>
       </div>
 
       <TransactionList

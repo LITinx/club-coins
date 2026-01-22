@@ -55,7 +55,7 @@ export function RegisterForm() {
 
     if (signUpError) {
       if (signUpError.message.includes('already registered')) {
-        setError('An account with this email already exists')
+        setError('Аккаунт с этим email уже существует')
       } else {
         setError(signUpError.message)
       }
@@ -77,8 +77,8 @@ export function RegisterForm() {
   if (success) {
     return (
       <div className="rounded-lg bg-green-50 p-4 text-center">
-        <p className="font-medium text-green-800">Account created successfully!</p>
-        <p className="mt-1 text-sm text-green-600">Redirecting to dashboard...</p>
+        <p className="font-medium text-green-800">Аккаунт успешно создан!</p>
+        <p className="mt-1 text-sm text-green-600">Перенаправление на панель управления...</p>
       </div>
     )
   }
@@ -92,17 +92,17 @@ export function RegisterForm() {
       )}
 
       <Input
-        label="Display Name"
+        label="Отображаемое имя"
         name="displayName"
         type="text"
-        placeholder="John Doe"
+        placeholder="Иван Иванов"
         autoComplete="name"
         error={fieldErrors.displayName}
         required
       />
 
       <Input
-        label="Email"
+        label="Электронная почта"
         name="email"
         type="email"
         placeholder="you@example.com"
@@ -112,18 +112,18 @@ export function RegisterForm() {
       />
 
       <Input
-        label="Password"
+        label="Пароль"
         name="password"
         type="password"
         placeholder="••••••••"
         autoComplete="new-password"
         error={fieldErrors.password}
-        hint="At least 8 characters"
+        hint="Минимум 8 символов"
         required
       />
 
       <Input
-        label="Confirm Password"
+        label="Подтвердите пароль"
         name="confirmPassword"
         type="password"
         placeholder="••••••••"
@@ -133,7 +133,7 @@ export function RegisterForm() {
       />
 
       <Button type="submit" className="w-full" isLoading={isLoading}>
-        Create account
+        Создать аккаунт
       </Button>
     </form>
   )

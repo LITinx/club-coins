@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 
 export const metadata = {
-  title: 'Redemption Successful',
+  title: 'Обмен успешен',
 }
 
 export default function RewardSuccessPage() {
@@ -26,16 +26,16 @@ export default function RewardSuccessPage() {
               />
             </svg>
           </div>
-          <h1 className="mb-2 text-2xl font-bold text-gray-900">Redemption Successful!</h1>
+          <h1 className="mb-2 text-2xl font-bold text-gray-900">Обмен успешен!</h1>
           <p className="mb-6 text-gray-500">
-            Your reward has been redeemed. Check with a club admin to claim your reward.
+            Ваша награда обменяна. Обратитесь к администратору клуба, чтобы получить награду.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link href="/dashboard/rewards">
-              <Button variant="outline">Browse More Rewards</Button>
+              <Button variant="outline">Смотреть другие награды</Button>
             </Link>
             <Link href="/dashboard">
-              <Button>Back to Dashboard</Button>
+              <Button>Вернуться на главную</Button>
             </Link>
           </div>
         </CardContent>

@@ -61,13 +61,13 @@ export function TransferForm({ currentBalance, currentUserId }: TransferFormProp
 
       if (!response.ok) {
         const data = await response.json()
-        throw new Error(data.error ?? 'Failed to transfer coins')
+        throw new Error(data.error ?? 'Не удалось перевести монеты')
       }
 
       setSuccess(true)
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : 'Произошла ошибка')
     } finally {
       setIsLoading(false)
     }
@@ -92,9 +92,9 @@ export function TransferForm({ currentBalance, currentUserId }: TransferFormProp
               />
             </svg>
           </div>
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">Transfer Complete!</h3>
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">Перевод выполнен!</h3>
           <p className="mb-4 text-gray-500">
-            {amountNum} coins sent to {selectedUser?.display_name}
+            {amountNum} монет отправлено {selectedUser?.display_name}
           </p>
           <Button
             onClick={() => {
@@ -104,7 +104,7 @@ export function TransferForm({ currentBalance, currentUserId }: TransferFormProp
               setDescription('')
             }}
           >
-            Make Another Transfer
+            Сделать ещё перевод
           </Button>
         </CardContent>
       </Card>
@@ -115,16 +115,16 @@ export function TransferForm({ currentBalance, currentUserId }: TransferFormProp
     <>
       <Card variant="bordered">
         <CardHeader>
-          <CardTitle>Send Coins</CardTitle>
+          <CardTitle>Отправить монеты</CardTitle>
           <p className="text-sm text-gray-500">
-            Your balance: <span className="font-semibold">{currentBalance.toLocaleString()}</span> coins
+            Ваш баланс: <span className="font-semibold">{currentBalance.toLocaleString()}</span> монет
           </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Recipient
+                Получатель
               </label>
               <UserSearch
                 currentUserId={currentUserId}
@@ -134,23 +134,25 @@ export function TransferForm({ currentBalance, currentUserId }: TransferFormProp
             </div>
 
             <Input
-              label="Amount"
+              label="Сумма"
               type="number"
+              inputMode="numeric"
+              pattern="[0-9]*"
               min="1"
               max={currentBalance}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="Enter coin amount"
-              error={amountNum > currentBalance ? 'Insufficient balance' : undefined}
+              placeholder="Введите количество монет"
+              error={amountNum > currentBalance ? 'Недостаточно средств' : undefined}
               required
             />
 
             <Input
-              label="Note (optional)"
+              label="Примечание (необязательно)"
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g., Thanks for the help!"
+              placeholder="например, Спасибо за помощь!"
             />
 
             {error && (
@@ -162,7 +164,7 @@ export function TransferForm({ currentBalance, currentUserId }: TransferFormProp
               className="w-full"
               disabled={!canTransfer || isLoading}
             >
-              {isLoading ? 'Sending...' : 'Review Transfer'}
+              {isLoading ? 'Отправка...' : 'Проверить перевод'}
             </Button>
           </form>
         </CardContent>

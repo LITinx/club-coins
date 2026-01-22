@@ -45,7 +45,7 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
 
       if (!response.ok) {
         const data = await response.json()
-        throw new Error(data.error ?? 'Failed to award coins')
+        throw new Error(data.error ?? 'Не удалось начислить монеты')
       }
 
       setSuccess(true)
@@ -56,7 +56,7 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
       // Refresh the page data
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : 'Произошла ошибка')
     } finally {
       setIsLoading(false)
     }
@@ -81,9 +81,9 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
               />
             </svg>
           </div>
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">Coins Awarded!</h3>
-          <p className="mb-4 text-gray-500">The member has been notified.</p>
-          <Button onClick={() => setSuccess(false)}>Award More Coins</Button>
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">Монеты начислены!</h3>
+          <p className="mb-4 text-gray-500">Участник получил уведомление.</p>
+          <Button onClick={() => setSuccess(false)}>Начислить ещё</Button>
         </CardContent>
       </Card>
     )
@@ -92,22 +92,22 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
   return (
     <Card variant="bordered">
       <CardHeader>
-        <CardTitle>Award Coins to Member</CardTitle>
+        <CardTitle>Начислить монеты участнику</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="member" className="block text-sm font-medium text-gray-700">
-              Select Member
+            <label htmlFor="member" className="mb-1.5 block text-sm font-medium text-gray-700">
+              Выберите участника
             </label>
             <select
               id="member"
               value={selectedUserId}
               onChange={(e) => setSelectedUserId(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 min-h-[44px] touch-manipulation sm:px-4 sm:text-sm"
               required
             >
-              <option value="">Choose a member...</option>
+              <option value="">Выберите участника...</option>
               {members.map((member) => (
                 <option key={member.id} value={member.id}>
                   {member.display_name} ({member.email})
@@ -117,21 +117,23 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
           </div>
 
           <Input
-            label="Amount"
+            label="Сумма"
             type="number"
+            inputMode="numeric"
+            pattern="[0-9]*"
             min="1"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="Enter coin amount"
+            placeholder="Введите количество монет"
             required
           />
 
           <Input
-            label="Description (optional)"
+            label="Описание (необязательно)"
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g., Attendance bonus, Event participation"
+            placeholder="например, Бонус за посещение, Участие в мероприятии"
           />
 
           {error && (
@@ -139,7 +141,7 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
           )}
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Awarding...' : 'Award Coins'}
+            {isLoading ? 'Начисление...' : 'Начислить монеты'}
           </Button>
         </form>
       </CardContent>

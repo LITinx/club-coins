@@ -74,20 +74,20 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
 
   const getTitle = () => {
     if (transaction.type === 'award') {
-      return 'Reward received'
+      return 'Награда получена'
     }
     if (transaction.type === 'redemption') {
-      return `Redeemed: ${transaction.reward?.name ?? 'Reward'}`
+      return `Обменяно: ${transaction.reward?.name ?? 'Награда'}`
     }
     if (isReceived) {
-      return `Received from ${transaction.from_user?.display_name ?? 'Unknown'}`
+      return `Получено от ${transaction.from_user?.display_name ?? 'Неизвестно'}`
     }
-    return `Sent to ${transaction.to_user?.display_name ?? 'Unknown'}`
+    return `Отправлено ${transaction.to_user?.display_name ?? 'Неизвестно'}`
   }
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('ru-RU', {
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
@@ -95,25 +95,56 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
     })
   }
 
+  const formatDateShort = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('ru-RU', {
+      month: 'short',
+      day: 'numeric',
+    })
+  }
+
+  const isNegative = isRedemption || (!isReceived && transaction.type === 'transfer')
+
   return (
-    <li className="flex items-center gap-4 p-4">
-      {getIcon()}
-      <div className="flex-1 min-w-0">
-        <p className="font-medium text-gray-900 truncate">{getTitle()}</p>
-        {transaction.description && (
-          <p className="text-sm text-gray-500 truncate">{transaction.description}</p>
-        )}
-        <p className="text-xs text-gray-400">{formatDate(transaction.created_at)}</p>
+    <li className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
+      {/* Icon - smaller on mobile */}
+      <div className="flex-shrink-0 [&>div]:h-8 [&>div]:w-8 sm:[&>div]:h-10 sm:[&>div]:w-10 [&_svg]:h-4 [&_svg]:w-4 sm:[&_svg]:h-5 sm:[&_svg]:w-5">
+        {getIcon()}
       </div>
-      <div
-        className={`text-right font-semibold ${
-          isRedemption || (!isReceived && transaction.type === 'transfer')
-            ? 'text-red-600'
-            : 'text-green-600'
-        }`}
-      >
-        {isRedemption || (!isReceived && transaction.type === 'transfer') ? '-' : '+'}
-        {transaction.amount.toLocaleString()}
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="font-medium text-gray-900 truncate text-sm sm:text-base">{getTitle()}</p>
+            {/* Description - hidden on very small screens, shown as tooltip or on tap */}
+            {transaction.description && (
+              <p className="hidden text-sm text-gray-500 truncate xs:block sm:text-sm">
+                {transaction.description}
+              </p>
+            )}
+          </div>
+          {/* Amount */}
+          <div
+            className={`flex-shrink-0 text-right font-semibold text-sm sm:text-base ${
+              isNegative ? 'text-red-600' : 'text-green-600'
+            }`}
+          >
+            {isNegative ? '-' : '+'}
+            {transaction.amount.toLocaleString()}
+          </div>
+        </div>
+        {/* Date - mobile shows short version */}
+        <p className="text-xs text-gray-400 mt-0.5">
+          <span className="sm:hidden">{formatDateShort(transaction.created_at)}</span>
+          <span className="hidden sm:inline">{formatDate(transaction.created_at)}</span>
+        </p>
+        {/* Description on mobile - show below if exists and screen is very small */}
+        {transaction.description && (
+          <p className="text-xs text-gray-500 truncate xs:hidden mt-0.5">
+            {transaction.description}
+          </p>
+        )}
       </div>
     </li>
   )

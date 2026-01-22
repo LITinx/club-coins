@@ -1,26 +1,26 @@
 import { z } from 'zod'
 
 // Common validations
-export const emailSchema = z.string().email('Please enter a valid email address')
+export const emailSchema = z.string().email('Пожалуйста, введите корректный email адрес')
 
 export const passwordSchema = z
   .string()
-  .min(8, 'Password must be at least 8 characters')
-  .max(100, 'Password must be less than 100 characters')
+  .min(8, 'Пароль должен содержать минимум 8 символов')
+  .max(100, 'Пароль должен быть короче 100 символов')
 
 export const displayNameSchema = z
   .string()
-  .min(2, 'Display name must be at least 2 characters')
-  .max(100, 'Display name must be less than 100 characters')
+  .min(2, 'Имя должно содержать минимум 2 символа')
+  .max(100, 'Имя должно быть короче 100 символов')
 
 export const amountSchema = z
   .number()
-  .int('Amount must be a whole number')
-  .positive('Amount must be greater than 0')
+  .int('Сумма должна быть целым числом')
+  .positive('Сумма должна быть больше 0')
 
 export const descriptionSchema = z
   .string()
-  .max(500, 'Description must be less than 500 characters')
+  .max(500, 'Описание должно быть короче 500 символов')
   .optional()
 
 // Pagination

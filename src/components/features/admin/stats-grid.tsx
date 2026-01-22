@@ -14,9 +14,9 @@ export function StatsGrid({ stats }: StatsGridProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <StatsCard
-        title="Total Members"
+        title="Всего участников"
         value={stats.totalMembers}
-        description={`${stats.activeMembers} active`}
+        description={`${stats.activeMembers} активных`}
         icon={
           <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -30,9 +30,9 @@ export function StatsGrid({ stats }: StatsGridProps) {
       />
 
       <StatsCard
-        title="Coins in Circulation"
+        title="Монет в обращении"
         value={stats.totalCoinsInCirculation}
-        description="Total member balances"
+        description="Общий баланс участников"
         icon={
           <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -46,9 +46,9 @@ export function StatsGrid({ stats }: StatsGridProps) {
       />
 
       <StatsCard
-        title="Total Coins Awarded"
+        title="Всего начислено монет"
         value={stats.totalCoinsAwarded}
-        description="All-time awards"
+        description="За всё время"
         icon={
           <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -62,9 +62,9 @@ export function StatsGrid({ stats }: StatsGridProps) {
       />
 
       <StatsCard
-        title="Total Coins Redeemed"
+        title="Всего потрачено монет"
         value={stats.totalCoinsRedeemed}
-        description="All-time redemptions"
+        description="За всё время"
         icon={
           <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -78,9 +78,9 @@ export function StatsGrid({ stats }: StatsGridProps) {
       />
 
       <StatsCard
-        title="Net Coins Distributed"
+        title="Чистый остаток монет"
         value={stats.totalCoinsAwarded - stats.totalCoinsRedeemed}
-        description="Awards minus redemptions"
+        description="Начисления минус траты"
         icon={
           <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -94,9 +94,9 @@ export function StatsGrid({ stats }: StatsGridProps) {
       />
 
       <StatsCard
-        title="Member Engagement"
+        title="Вовлечённость"
         value={`${stats.totalMembers > 0 ? Math.round((stats.activeMembers / stats.totalMembers) * 100) : 0}%`}
-        description="Active member rate"
+        description="Доля активных участников"
         icon={
           <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

@@ -8,7 +8,7 @@ interface RecentActivityListProps {
 export function RecentActivityList({ transactions }: RecentActivityListProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('ru-RU', {
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
@@ -19,13 +19,13 @@ export function RecentActivityList({ transactions }: RecentActivityListProps) {
   const getActivityDescription = (tx: TransactionWithUsers) => {
     switch (tx.type) {
       case 'award':
-        return `${tx.from_user?.display_name ?? 'Admin'} awarded ${tx.amount} coins to ${tx.to_user?.display_name ?? 'Unknown'}`
+        return `${tx.from_user?.display_name ?? 'Админ'} начислил ${tx.amount} монет ${tx.to_user?.display_name ?? 'Неизвестно'}`
       case 'transfer':
-        return `${tx.from_user?.display_name ?? 'Unknown'} sent ${tx.amount} coins to ${tx.to_user?.display_name ?? 'Unknown'}`
+        return `${tx.from_user?.display_name ?? 'Неизвестно'} отправил ${tx.amount} монет ${tx.to_user?.display_name ?? 'Неизвестно'}`
       case 'redemption':
-        return `${tx.from_user?.display_name ?? 'Unknown'} redeemed ${tx.reward?.name ?? 'a reward'} for ${tx.amount} coins`
+        return `${tx.from_user?.display_name ?? 'Неизвестно'} обменял ${tx.reward?.name ?? 'награду'} за ${tx.amount} монет`
       default:
-        return `Transaction of ${tx.amount} coins`
+        return `Транзакция на ${tx.amount} монет`
     }
   }
 
@@ -46,7 +46,7 @@ export function RecentActivityList({ transactions }: RecentActivityListProps) {
     return (
       <Card variant="bordered">
         <div className="p-8 text-center">
-          <p className="text-gray-500">No recent activity</p>
+          <p className="text-gray-500">Нет недавней активности</p>
         </div>
       </Card>
     )
@@ -69,7 +69,7 @@ export function RecentActivityList({ transactions }: RecentActivityListProps) {
               </div>
             </div>
             <span className="font-semibold text-gray-900">
-              {tx.amount.toLocaleString()} coins
+              {tx.amount.toLocaleString()} монет
             </span>
           </li>
         ))}

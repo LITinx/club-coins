@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { TransferForm } from '@/components/forms/transfer-form'
 
 export const metadata = {
-  title: 'Transfer Coins',
+  title: 'Перевод монет',
 }
 
 export default async function TransferPage() {
@@ -29,8 +29,8 @@ export default async function TransferPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Transfer Coins</h1>
-        <p className="text-gray-600">Send coins to another club member</p>
+        <h1 className="text-2xl font-bold text-gray-900">Перевод монет</h1>
+        <p className="text-gray-600">Отправьте монеты другому участнику клуба</p>
       </div>
 
       <TransferForm currentBalance={typedProfile?.balance ?? 0} currentUserId={user.id} />

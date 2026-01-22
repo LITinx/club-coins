@@ -48,13 +48,13 @@ export function RewardForm({ reward }: RewardFormProps) {
 
       if (!response.ok) {
         const data = await response.json()
-        throw new Error(data.error ?? 'Failed to save reward')
+        throw new Error(data.error ?? 'Не удалось сохранить награду')
       }
 
       router.push('/dashboard/admin/rewards')
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : 'Произошла ошибка')
     } finally {
       setIsLoading(false)
     }
@@ -63,50 +63,50 @@ export function RewardForm({ reward }: RewardFormProps) {
   return (
     <Card variant="bordered">
       <CardHeader>
-        <CardTitle>{isEditing ? 'Edit Reward' : 'New Reward'}</CardTitle>
+        <CardTitle>{isEditing ? 'Редактировать награду' : 'Новая награда'}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Name"
+            label="Название"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., Free Coffee"
+            placeholder="например, Бесплатный кофе"
             required
           />
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description (optional)
+              Описание (необязательно)
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe the reward..."
+              placeholder="Опишите награду..."
               rows={3}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             />
           </div>
 
           <Input
-            label="Coin Cost"
+            label="Стоимость в монетах"
             type="number"
             min="1"
             value={coinCost}
             onChange={(e) => setCoinCost(e.target.value)}
-            placeholder="How many coins to redeem"
+            placeholder="Сколько монет нужно для обмена"
             required
           />
 
           <Input
-            label="Inventory (optional)"
+            label="Количество (необязательно)"
             type="number"
             min="0"
             value={inventory}
             onChange={(e) => setInventory(e.target.value)}
-            placeholder="Leave empty for unlimited"
-            hint="Set a number to limit availability"
+            placeholder="Оставьте пустым для неограниченного"
+            hint="Установите число для ограничения доступности"
           />
 
           <div className="flex items-center gap-3">
@@ -118,7 +118,7 @@ export function RewardForm({ reward }: RewardFormProps) {
               className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
             />
             <label htmlFor="is_active" className="text-sm text-gray-700">
-              Active (visible in catalog)
+              Активна (видна в каталоге)
             </label>
           </div>
 
@@ -132,10 +132,10 @@ export function RewardForm({ reward }: RewardFormProps) {
               variant="outline"
               onClick={() => router.back()}
             >
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Saving...' : isEditing ? 'Update Reward' : 'Create Reward'}
+              {isLoading ? 'Сохранение...' : isEditing ? 'Обновить награду' : 'Создать награду'}
             </Button>
           </div>
         </form>

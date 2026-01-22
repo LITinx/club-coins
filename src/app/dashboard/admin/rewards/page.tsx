@@ -5,7 +5,7 @@ import { AdminRewardList } from '@/components/features/admin/admin-reward-list'
 import type { Reward } from '@/types/database'
 
 export const metadata = {
-  title: 'Manage Rewards',
+  title: 'Управление наградами',
 }
 
 export default async function AdminRewardsPage() {
@@ -20,11 +20,11 @@ export default async function AdminRewardsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Manage Rewards</h1>
-          <p className="text-gray-600">Create and manage reward catalog items</p>
+          <h1 className="text-2xl font-bold text-gray-900">Управление наградами</h1>
+          <p className="text-gray-600">Создание и управление каталогом наград</p>
         </div>
         <Link href="/dashboard/admin/rewards/new">
-          <Button>Add Reward</Button>
+          <Button>Добавить награду</Button>
         </Link>
       </div>
 

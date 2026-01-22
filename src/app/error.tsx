@@ -32,11 +32,11 @@ export default function Error({
             />
           </svg>
         </div>
-        <h1 className="mb-2 text-2xl font-bold text-gray-900">Something went wrong</h1>
+        <h1 className="mb-2 text-2xl font-bold text-gray-900">Что-то пошло не так</h1>
         <p className="mb-6 text-gray-500">
-          An unexpected error occurred. Please try again.
+          Произошла непредвиденная ошибка. Пожалуйста, попробуйте ещё раз.
         </p>
-        <Button onClick={reset}>Try Again</Button>
+        <Button onClick={reset}>Попробовать снова</Button>
       </div>
     </div>
   )

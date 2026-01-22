@@ -3,22 +3,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { RegisterForm } from '@/components/forms/register-form'
 
 export const metadata = {
-  title: 'Register',
+  title: 'Регистрация',
 }
 
 export default function RegisterPage() {
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>Join the club and start earning coins</CardDescription>
+        <CardTitle>Создать аккаунт</CardTitle>
+        <CardDescription>Присоединяйтесь к клубу и начните зарабатывать монеты</CardDescription>
       </CardHeader>
       <CardContent>
         <RegisterForm />
         <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{' '}
+          Уже есть аккаунт?{' '}
           <Link href="/login" className="font-medium text-primary-600 hover:text-primary-500">
-            Sign in
+            Войти
           </Link>
         </p>
       </CardContent>

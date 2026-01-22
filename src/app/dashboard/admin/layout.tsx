@@ -25,32 +25,35 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="space-y-6">
-      <nav className="flex gap-4 border-b border-gray-200 pb-4">
-        <Link
-          href="/dashboard/admin/members"
-          className="text-sm font-medium text-gray-600 hover:text-primary-600"
-        >
-          Members
-        </Link>
-        <Link
-          href="/dashboard/admin/award"
-          className="text-sm font-medium text-gray-600 hover:text-primary-600"
-        >
-          Award Coins
-        </Link>
-        <Link
-          href="/dashboard/admin/rewards"
-          className="text-sm font-medium text-gray-600 hover:text-primary-600"
-        >
-          Manage Rewards
-        </Link>
-        <Link
-          href="/dashboard/admin/stats"
-          className="text-sm font-medium text-gray-600 hover:text-primary-600"
-        >
-          Statistics
-        </Link>
+    <div className="space-y-4 sm:space-y-6">
+      {/* Horizontally scrollable admin nav on mobile */}
+      <nav className="-mx-4 border-b border-gray-200 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-1 overflow-x-auto pb-4 scrollbar-hide scroll-smooth-touch sm:gap-4">
+          <Link
+            href="/dashboard/admin/members"
+            className="flex-shrink-0 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-primary-600 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0 min-touch-target touch-manipulation"
+          >
+            Участники
+          </Link>
+          <Link
+            href="/dashboard/admin/award"
+            className="flex-shrink-0 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-primary-600 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0 min-touch-target touch-manipulation"
+          >
+            Начислить монеты
+          </Link>
+          <Link
+            href="/dashboard/admin/rewards"
+            className="flex-shrink-0 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-primary-600 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0 min-touch-target touch-manipulation"
+          >
+            Награды
+          </Link>
+          <Link
+            href="/dashboard/admin/stats"
+            className="flex-shrink-0 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-primary-600 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0 min-touch-target touch-manipulation"
+          >
+            Статистика
+          </Link>
+        </div>
       </nav>
       {children}
     </div>

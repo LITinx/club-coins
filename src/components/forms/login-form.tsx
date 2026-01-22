@@ -46,7 +46,7 @@ export function LoginForm() {
     })
 
     if (signInError) {
-      setError('Invalid email or password')
+      setError('Неверный email или пароль')
       setIsLoading(false)
       return
     }
@@ -64,7 +64,7 @@ export function LoginForm() {
       )}
 
       <Input
-        label="Email"
+        label="Электронная почта"
         name="email"
         type="email"
         placeholder="you@example.com"
@@ -74,7 +74,7 @@ export function LoginForm() {
       />
 
       <Input
-        label="Password"
+        label="Пароль"
         name="password"
         type="password"
         placeholder="••••••••"
@@ -84,7 +84,7 @@ export function LoginForm() {
       />
 
       <Button type="submit" className="w-full" isLoading={isLoading}>
-        Sign in
+        Войти
       </Button>
     </form>
   )

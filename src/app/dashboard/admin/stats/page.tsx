@@ -4,7 +4,7 @@ import { RecentActivityList } from '@/components/features/admin/recent-activity'
 import type { TransactionWithUsers } from '@/types/database'
 
 export const metadata = {
-  title: 'Club Statistics',
+  title: 'Статистика клуба',
 }
 
 export default async function AdminStatsPage() {
@@ -65,14 +65,14 @@ export default async function AdminStatsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Club Statistics</h1>
-        <p className="text-gray-600">Overview of club coin activity</p>
+        <h1 className="text-2xl font-bold text-gray-900">Статистика клуба</h1>
+        <p className="text-gray-600">Обзор активности монет клуба</p>
       </div>
 
       <StatsGrid stats={stats} />
 
       <div>
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">Recent Activity</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Последняя активность</h2>
         <RecentActivityList transactions={(recentTransactions ?? []) as TransactionWithUsers[]} />
       </div>
     </div>

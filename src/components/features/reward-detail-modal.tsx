@@ -30,26 +30,32 @@ export function RewardDetailModal({ reward, userBalance, onClose }: RewardDetail
 
       if (!response.ok) {
         const data = await response.json()
-        throw new Error(data.error ?? 'Failed to redeem reward')
+        throw new Error(data.error ?? 'Не удалось обменять награду')
       }
 
       router.push('/dashboard/rewards/success')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : 'Произошла ошибка')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:px-4">
+      {/* Full-screen sheet on mobile, centered modal on desktop */}
+      <div className="w-full max-h-[90vh] overflow-auto rounded-t-2xl bg-white p-4 shadow-xl safe-area-inset-bottom animate-slide-up sm:max-w-md sm:rounded-xl sm:p-6 sm:animate-none">
+        {/* Mobile drag handle */}
+        <div className="mb-3 flex justify-center sm:hidden">
+          <div className="h-1 w-10 rounded-full bg-gray-300" />
+        </div>
+
         <div className="mb-4 flex items-start justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Confirm Redemption</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Подтвердите обмен</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
-            aria-label="Close"
+            className="p-2 -mr-2 text-gray-400 hover:text-gray-600 min-touch-target touch-manipulation"
+            aria-label="Закрыть"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -62,10 +68,10 @@ export function RewardDetailModal({ reward, userBalance, onClose }: RewardDetail
           </button>
         </div>
 
-        <div className="mb-6 space-y-4">
-          <div className="flex items-center justify-center rounded-lg bg-gradient-to-br from-primary-100 to-primary-200 p-8">
+        <div className="mb-6 space-y-3 sm:space-y-4">
+          <div className="flex items-center justify-center rounded-lg bg-gradient-to-br from-primary-100 to-primary-200 p-6 sm:p-8">
             <svg
-              className="h-20 w-20 text-primary-500"
+              className="h-16 w-16 text-primary-500 sm:h-20 sm:w-20"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -80,31 +86,31 @@ export function RewardDetailModal({ reward, userBalance, onClose }: RewardDetail
           </div>
 
           <div className="text-center">
-            <h4 className="text-xl font-bold text-gray-900">{reward.name}</h4>
+            <h4 className="text-lg font-bold text-gray-900 sm:text-xl">{reward.name}</h4>
             {reward.description && (
               <p className="mt-1 text-sm text-gray-500">{reward.description}</p>
             )}
           </div>
 
-          <div className="flex items-center justify-between rounded-lg bg-gray-50 p-4">
-            <span className="text-gray-600">Cost</span>
-            <span className="text-xl font-bold text-primary-600">
-              {reward.coin_cost.toLocaleString()} coins
+          <div className="flex items-center justify-between rounded-lg bg-gray-50 p-3 sm:p-4">
+            <span className="text-gray-600">Стоимость</span>
+            <span className="text-lg font-bold text-primary-600 sm:text-xl">
+              {reward.coin_cost.toLocaleString()} монет
             </span>
           </div>
 
-          <div className="flex items-center justify-between rounded-lg bg-gray-50 p-4">
-            <span className="text-gray-600">Your Balance</span>
-            <span className={`text-lg font-semibold ${canAfford ? 'text-green-600' : 'text-red-600'}`}>
-              {userBalance.toLocaleString()} coins
+          <div className="flex items-center justify-between rounded-lg bg-gray-50 p-3 sm:p-4">
+            <span className="text-gray-600">Ваш баланс</span>
+            <span className={`text-base font-semibold sm:text-lg ${canAfford ? 'text-green-600' : 'text-red-600'}`}>
+              {userBalance.toLocaleString()} монет
             </span>
           </div>
 
           {canAfford && (
-            <div className="flex items-center justify-between rounded-lg bg-green-50 p-4">
-              <span className="text-green-700">Balance After</span>
-              <span className="text-lg font-semibold text-green-700">
-                {(userBalance - reward.coin_cost).toLocaleString()} coins
+            <div className="flex items-center justify-between rounded-lg bg-green-50 p-3 sm:p-4">
+              <span className="text-green-700">Баланс после</span>
+              <span className="text-base font-semibold text-green-700 sm:text-lg">
+                {(userBalance - reward.coin_cost).toLocaleString()} монет
               </span>
             </div>
           )}
@@ -114,16 +120,16 @@ export function RewardDetailModal({ reward, userBalance, onClose }: RewardDetail
           )}
         </div>
 
-        <div className="flex gap-3">
-          <Button variant="outline" className="flex-1 text-black" onClick={onClose}>
-            Cancel
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+          <Button variant="outline" className="flex-1 min-touch-target order-2 sm:order-1" onClick={onClose}>
+            Отмена
           </Button>
           <Button
-            className="flex-1"
+            className="flex-1 min-touch-target order-1 sm:order-2"
             onClick={handleRedeem}
             disabled={!canAfford || !isAvailable || isLoading}
           >
-            {isLoading ? 'Processing...' : 'Confirm Redemption'}
+            {isLoading ? 'Обработка...' : 'Подтвердить обмен'}
           </Button>
         </div>
       </div>

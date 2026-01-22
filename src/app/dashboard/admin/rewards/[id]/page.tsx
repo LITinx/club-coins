@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { RewardForm } from '@/components/forms/reward-form'
 
 export const metadata = {
-  title: 'Edit Reward',
+  title: 'Редактировать награду',
 }
 
 interface RewardEditPageProps {
@@ -19,8 +19,8 @@ export default async function RewardEditPage({ params }: RewardEditPageProps) {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Create Reward</h1>
-          <p className="text-gray-600">Add a new reward to the catalog</p>
+          <h1 className="text-2xl font-bold text-gray-900">Создать награду</h1>
+          <p className="text-gray-600">Добавить новую награду в каталог</p>
         </div>
         <RewardForm />
       </div>
@@ -40,8 +40,8 @@ export default async function RewardEditPage({ params }: RewardEditPageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Edit Reward</h1>
-        <p className="text-gray-600">Update reward details</p>
+        <h1 className="text-2xl font-bold text-gray-900">Редактировать награду</h1>
+        <p className="text-gray-600">Обновить детали награды</p>
       </div>
       <RewardForm reward={reward} />
     </div>

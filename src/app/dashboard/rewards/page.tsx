@@ -4,7 +4,7 @@ import { RewardGrid } from '@/components/features/reward-grid'
 import type { Reward } from '@/types/database'
 
 export const metadata = {
-  title: 'Rewards Catalog',
+  title: 'Каталог наград',
 }
 
 export default async function RewardsPage() {
@@ -37,9 +37,9 @@ export default async function RewardsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Rewards Catalog</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Каталог наград</h1>
         <p className="text-gray-600">
-          Your balance: <span className="font-semibold text-primary-600">{typedProfile?.balance ?? 0}</span> coins
+          Ваш баланс: <span className="font-semibold text-primary-600">{typedProfile?.balance ?? 0}</span> монет
         </p>
       </div>
 

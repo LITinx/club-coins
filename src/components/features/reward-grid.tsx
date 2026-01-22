@@ -31,8 +31,8 @@ export function RewardGrid({ rewards, userBalance }: RewardGridProps) {
             />
           </svg>
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-gray-900">No rewards available</h3>
-        <p className="text-gray-500">Check back later for exciting rewards!</p>
+        <h3 className="mb-2 text-lg font-semibold text-gray-900">Награды пока недоступны</h3>
+        <p className="text-gray-500">Загляните позже, чтобы увидеть интересные награды!</p>
       </div>
     )
   }

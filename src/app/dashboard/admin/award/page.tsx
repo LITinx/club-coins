@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { AwardCoinsForm } from '@/components/forms/award-coins-form'
 
 export const metadata = {
-  title: 'Award Coins',
+  title: 'Начислить монеты',
 }
 
 interface AwardPageProps {
@@ -34,8 +34,8 @@ export default async function AdminAwardPage({ searchParams }: AwardPageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Award Coins</h1>
-        <p className="text-gray-600">Reward club members with coins</p>
+        <h1 className="text-2xl font-bold text-gray-900">Начислить монеты</h1>
+        <p className="text-gray-600">Награждайте участников клуба монетами</p>
       </div>
 
       <AwardCoinsForm members={members ?? []} preselectedUser={preselectedUser} />

@@ -3,7 +3,7 @@ import { MemberList } from '@/components/features/admin/member-list'
 import type { User } from '@/types/database'
 
 export const metadata = {
-  title: 'Manage Members',
+  title: 'Управление участниками',
 }
 
 export default async function AdminMembersPage() {
@@ -17,8 +17,8 @@ export default async function AdminMembersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Club Members</h1>
-        <p className="text-gray-600">View and manage all club members</p>
+        <h1 className="text-2xl font-bold text-gray-900">Участники клуба</h1>
+        <p className="text-gray-600">Просмотр и управление всеми участниками клуба</p>
       </div>
 
       <MemberList members={(members ?? []) as User[]} />

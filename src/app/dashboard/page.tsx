@@ -5,7 +5,7 @@ import { TransactionList } from '@/components/features/transaction-list'
 import type { User, TransactionWithUsers } from '@/types/database'
 
 export const metadata = {
-  title: 'Dashboard',
+  title: 'Панель управления',
 }
 
 export default async function DashboardPage() {
@@ -51,21 +51,21 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
-          Welcome back, {typedProfile.display_name}!
+          С возвращением, {typedProfile.display_name}!
         </h1>
-        <p className="text-gray-600">Here&apos;s your coin overview</p>
+        <p className="text-gray-600">Обзор ваших монет</p>
       </div>
 
       <BalanceCard balance={typedProfile.balance} />
 
       <div>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Последняя активность</h2>
           <a
             href="/dashboard/history"
             className="text-sm font-medium text-primary-600 hover:text-primary-700"
           >
-            View all
+            Показать все
           </a>
         </div>
         <TransactionList

@@ -33,34 +33,34 @@ export function RewardCard({ reward, userBalance, onRedeem }: RewardCardProps) {
           </svg>
         </div>
 
-        <h3 className="mb-1 font-semibold text-gray-900">{reward.name}</h3>
+        <h3 className="mb-1 font-semibold text-gray-900 truncate" title={reward.name}>{reward.name}</h3>
         {reward.description && (
-          <p className="mb-3 flex-1 text-sm text-gray-500">{reward.description}</p>
+          <p className="mb-3 flex-1 text-sm text-gray-500 line-clamp-2">{reward.description}</p>
         )}
 
         <div className="mt-auto space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-primary-600">
-              {reward.coin_cost.toLocaleString()} coins
+              {reward.coin_cost.toLocaleString()} монет
             </span>
             {!isAvailable && (
               <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
-                Out of stock
+                Нет в наличии
               </span>
             )}
             {isAvailable && reward.inventory !== null && (
               <span className="text-xs text-gray-500">
-                {reward.inventory} left
+                Осталось: {reward.inventory}
               </span>
             )}
           </div>
 
           <Button
-            className="w-full"
+            className="w-full min-touch-target"
             disabled={!canAfford || !isAvailable}
             onClick={() => onRedeem(reward)}
           >
-            {!isAvailable ? 'Out of Stock' : !canAfford ? 'Not Enough Coins' : 'Redeem'}
+            {!isAvailable ? 'Нет в наличии' : !canAfford ? 'Недостаточно монет' : 'Обменять'}
           </Button>
         </div>
       </CardContent>
