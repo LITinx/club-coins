@@ -53,7 +53,6 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-900">
           С возвращением, {typedProfile.display_name}!
         </h1>
-        <p className="text-gray-600">Обзор ваших монет</p>
       </div>
 
       <BalanceCard balance={typedProfile.balance} />

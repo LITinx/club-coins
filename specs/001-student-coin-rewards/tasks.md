@@ -225,21 +225,67 @@
 
 ---
 
-## Phase 10: Polish & Cross-Cutting Concerns
+## Phase 10: Mobile UI Support
 
-**Purpose**: Improvements that affect multiple user stories
+**Purpose**: Enhance UI for mobile devices (320px+) with touch-friendly interactions
 
-- [ ] T092 [P] Add loading skeletons for all pages in src/components/ui/skeleton.tsx
-- [ ] T093 [P] Add error boundary component in src/components/error-boundary.tsx
-- [ ] T094 [P] Create toast notification system in src/components/ui/toast.tsx
-- [ ] T095 Add responsive navigation for mobile in src/components/features/mobile-nav.tsx
-- [ ] T096 [P] Add PWA manifest and service worker config in public/manifest.json
-- [ ] T097 Optimize images with next/image throughout all components
-- [ ] T098 Add meta tags and SEO optimization in src/app/layout.tsx
-- [ ] T099 [P] Create 404 page in src/app/not-found.tsx
-- [ ] T100 [P] Create error page in src/app/error.tsx
-- [ ] T101 Run quickstart.md validation and fix any issues
-- [ ] T102 Final code cleanup and unused import removal
+### Setup & Infrastructure
+
+- [x] T092 Add mobile-specific CSS utilities (safe-area-inset, touch-action) in src/styles/globals.css
+- [x] T093 [P] Update tailwind.config.ts with custom xs breakpoint (320px) for small phones
+
+### Navigation & Layout (NAV)
+
+- [x] T094 [NAV] Add hamburger menu for admin link access on mobile in src/app/dashboard/layout.tsx
+- [x] T095 [P] [NAV] Make admin sub-navigation horizontally scrollable on mobile in src/app/dashboard/admin/layout.tsx
+- [x] T096 [P] [NAV] Add active state highlighting to mobile bottom navigation in src/app/dashboard/layout.tsx
+- [x] T097 [NAV] Hide user info in header on small screens, consolidate in profile menu in src/app/dashboard/layout.tsx
+
+### Lists & Data Display (LIST)
+
+- [x] T098 [LIST] Refactor member-list.tsx to card-based layout on mobile in src/components/features/admin/member-list.tsx
+- [x] T099 [P] [LIST] Add responsive transaction-item.tsx with collapsed details on mobile in src/components/features/transaction-item.tsx
+- [x] T100 [P] [LIST] Make admin-reward-list.tsx responsive with card layout on mobile in src/components/features/admin/admin-reward-list.tsx
+
+### Forms & Inputs (FORM)
+
+- [x] T101 [FORM] Increase touch targets for all form inputs (min 44px height) in src/components/ui/input.tsx
+- [x] T102 [P] [FORM] Add proper input types (tel for amounts, email for email) in src/components/forms/transfer-form.tsx
+- [x] T103 [P] [FORM] Make user-search.tsx dropdown full-width on mobile with larger tap targets in src/components/features/user-search.tsx
+- [x] T104 [P] [FORM] Update award-coins-form.tsx select to be mobile-friendly in src/components/forms/award-coins-form.tsx
+- [x] T105 [FORM] Add numeric keypad trigger (inputmode="numeric") for coin amount inputs across all forms
+
+### Modals & Overlays (MODAL)
+
+- [x] T106 [MODAL] Convert transfer-confirm-modal.tsx to full-screen on mobile in src/components/features/transfer-confirm-modal.tsx
+- [x] T107 [P] [MODAL] Convert reward-detail-modal.tsx to full-screen sheet on mobile in src/components/features/reward-detail-modal.tsx
+- [x] T108 [P] [MODAL] Make notifications-dropdown.tsx full-width on mobile in src/components/features/notifications-dropdown.tsx
+- [x] T109 [MODAL] Add slide-up animation for mobile modals and handle iOS keyboard viewport issues
+
+### Cards & Components (CARD)
+
+- [x] T110 [P] [CARD] Adjust balance-card.tsx button layout to stack vertically on mobile in src/components/features/balance-card.tsx
+- [x] T111 [P] [CARD] Make reward-card.tsx text truncate properly on narrow screens in src/components/features/reward-card.tsx
+- [x] T112 [P] [CARD] Update stats-card.tsx for smaller screens in src/components/features/admin/stats-card.tsx
+- [x] T113 [CARD] Ensure pagination.tsx is touch-friendly with larger buttons in src/components/ui/pagination.tsx
+
+**Checkpoint**: All UI should be usable on 320px screens without horizontal overflow
+
+---
+
+## Phase 11: Polish & Cross-Cutting Concerns
+
+**Purpose**: Final improvements that affect multiple user stories
+
+- [ ] T114 [P] Add loading skeletons optimized for mobile layout in src/components/ui/skeleton.tsx
+- [ ] T115 [P] Add error boundary component in src/components/error-boundary.tsx
+- [ ] T116 [P] Update toast.tsx positioning for mobile (above bottom nav) in src/components/ui/toast.tsx
+- [ ] T117 [P] Add PWA manifest and service worker config in public/manifest.json
+- [ ] T118 Add viewport meta tag adjustments for notched devices in src/app/layout.tsx
+- [ ] T119 [P] Create 404 page in src/app/not-found.tsx
+- [ ] T120 [P] Create error page in src/app/error.tsx
+- [ ] T121 Test all pages at 320px, 375px, and 414px widths and fix any overflow issues
+- [ ] T122 Final code cleanup and unused import removal
 
 ---
 
@@ -256,7 +302,8 @@
 - **User Story 4 (Phase 7)**: Depends on US2 (needs balance display)
 - **User Story 5 (Phase 8)**: Depends on US4 (reward catalog exists to manage)
 - **User Story 7 (Phase 9)**: Depends on US1 (needs transaction data to report)
-- **Polish (Phase 10)**: Depends on all desired user stories being complete
+- **Mobile UI (Phase 10)**: Can start after Foundational (Phase 2) - independent of user stories
+- **Polish (Phase 11)**: Depends on all desired user stories and Mobile UI being complete
 
 ### User Story Dependencies
 
@@ -287,6 +334,8 @@
                                     └──────────────────┘
 
      US7: Stats (P3, Phase 9) - Can start after US1 completes
+
+     Mobile UI (Phase 10) - Can run in parallel with user story phases
 ```
 
 ### Parallel Opportunities
@@ -319,6 +368,32 @@ Task: "Create Input component in src/components/ui/input.tsx"
 # Launch in parallel after admin layout is ready:
 Task: "Create notification bell component in src/components/features/notification-bell.tsx"
 Task: "Create notifications dropdown in src/components/features/notifications-dropdown.tsx"
+```
+
+## Parallel Example: Mobile UI (Phase 10)
+
+```bash
+# Launch NAV tasks in parallel:
+Task: "Make admin sub-navigation horizontally scrollable on mobile in src/app/dashboard/admin/layout.tsx"
+Task: "Add active state highlighting to mobile bottom navigation in src/app/dashboard/layout.tsx"
+
+# Launch LIST tasks in parallel:
+Task: "Add responsive transaction-item.tsx with collapsed details on mobile"
+Task: "Make admin-reward-list.tsx responsive with card layout on mobile"
+
+# Launch FORM tasks in parallel:
+Task: "Add proper input types in src/components/forms/transfer-form.tsx"
+Task: "Make user-search.tsx dropdown full-width on mobile"
+Task: "Update award-coins-form.tsx select to be mobile-friendly"
+
+# Launch MODAL tasks in parallel:
+Task: "Convert reward-detail-modal.tsx to full-screen sheet on mobile"
+Task: "Make notifications-dropdown.tsx full-width on mobile"
+
+# Launch CARD tasks in parallel:
+Task: "Adjust balance-card.tsx button layout to stack vertically on mobile"
+Task: "Make reward-card.tsx text truncate properly on narrow screens"
+Task: "Update stats-card.tsx for smaller screens"
 ```
 
 ---
