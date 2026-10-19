@@ -26,7 +26,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   const validation = statusSchema.safeParse(body)
   if (!validation.success) {
     return NextResponse.json(
-      { error: validation.error.errors[0]?.message ?? 'Invalid input' },
+      { error: validation.error.errors[0]?.message ?? 'Некорректные данные' },
       { status: 400 }
     )
   }
@@ -34,7 +34,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   // Prevent admin from deactivating themselves
   if (memberId === adminCheck.userId && validation.data.status === 'inactive') {
     return NextResponse.json(
-      { error: 'Cannot deactivate your own account' },
+      { error: 'Нельзя деактивировать собственный аккаунт' },
       { status: 400 }
     )
   }
@@ -50,7 +50,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
   if (error) {
     console.error('Status update error:', error)
-    return NextResponse.json({ error: 'Failed to update status' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось обновить статус' }, { status: 500 })
   }
 
   return NextResponse.json(member)

@@ -2,8 +2,11 @@
 
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import type { User } from '@/types/database'
+import type { User, UserRole, UserStatus } from '@/types/database'
 import Link from 'next/link'
+
+const roleLabels: Record<UserRole, string> = { admin: 'Админ', student: 'Студент' }
+const statusLabels: Record<UserStatus, string> = { active: 'Активен', inactive: 'Неактивен' }
 
 interface MemberListProps {
   members: User[]
@@ -48,7 +51,7 @@ export function MemberList({ members }: MemberListProps) {
                       : 'bg-gray-100 text-gray-800'
                   }`}
                 >
-                  {member.status}
+                  {statusLabels[member.status]}
                 </span>
                 <span
                   className={`rounded-full px-2 py-1 text-xs font-medium ${
@@ -57,7 +60,7 @@ export function MemberList({ members }: MemberListProps) {
                       : 'bg-blue-100 text-blue-800'
                   }`}
                 >
-                  {member.role}
+                  {roleLabels[member.role]}
                 </span>
                 <Link href={`/dashboard/admin/award?userId=${member.id}`}>
                   <Button size="sm" variant="outline">
@@ -88,7 +91,7 @@ export function MemberList({ members }: MemberListProps) {
                         : 'bg-blue-100 text-blue-800'
                     }`}
                   >
-                    {member.role}
+                    {roleLabels[member.role]}
                   </span>
                 </div>
                 <p className="text-sm text-gray-500 truncate">{member.email}</p>
@@ -106,7 +109,7 @@ export function MemberList({ members }: MemberListProps) {
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >
-                    {member.status}
+                    {statusLabels[member.status]}
                   </span>
                 </div>
               </div>

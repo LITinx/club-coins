@@ -9,7 +9,7 @@ export async function GET() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: 'Требуется вход в аккаунт' }, { status: 401 })
   }
 
   const { count, error } = await supabase
@@ -19,7 +19,7 @@ export async function GET() {
     .eq('read', false)
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to fetch count' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось загрузить уведомления' }, { status: 500 })
   }
 
   return NextResponse.json({ count: count ?? 0 })

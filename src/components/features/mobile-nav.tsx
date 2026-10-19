@@ -73,7 +73,7 @@ export function MobileNav({ isAdmin }: MobileNavProps) {
   // Add admin link if user is admin
   if (isAdmin) {
     navItems.push({
-      href: '/dashboard/admin/members',
+      href: '/dashboard/admin',
       label: 'Админ',
       icon: (
         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

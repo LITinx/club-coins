@@ -14,7 +14,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: 'Требуется вход в аккаунт' }, { status: 401 })
   }
 
   const { error } = await supabase
@@ -24,7 +24,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
     .eq('user_id', user.id)
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to mark as read' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось отметить уведомление' }, { status: 500 })
   }
 
   return NextResponse.json({ success: true })

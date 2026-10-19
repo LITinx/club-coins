@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: 'Требуется вход в аккаунт' }, { status: 401 })
   }
 
   const body = await request.json()
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   const validation = transferSchema.safeParse(body)
   if (!validation.success) {
     return NextResponse.json(
-      { error: validation.error.errors[0]?.message ?? 'Invalid input' },
+      { error: validation.error.errors[0]?.message ?? 'Некорректные данные' },
       { status: 400 }
     )
   }
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
   // Prevent self-transfer
   if (toUserId === user.id) {
-    return NextResponse.json({ error: 'Cannot transfer to yourself' }, { status: 400 })
+    return NextResponse.json({ error: 'Нельзя перевести монеты самому себе' }, { status: 400 })
   }
 
   // Get sender's balance
@@ -40,12 +40,12 @@ export async function POST(request: Request) {
     .single()
 
   if (!sender || sender.status !== 'active') {
-    return NextResponse.json({ error: 'Account not active' }, { status: 400 })
+    return NextResponse.json({ error: 'Ваш аккаунт неактивен' }, { status: 400 })
   }
 
   // Check balance
   if (sender.balance < amount) {
-    return NextResponse.json({ error: 'Insufficient balance' }, { status: 400 })
+    return NextResponse.json({ error: 'Недостаточно монет' }, { status: 400 })
   }
 
   // Check recipient exists and is active
@@ -56,11 +56,11 @@ export async function POST(request: Request) {
     .single()
 
   if (!recipient) {
-    return NextResponse.json({ error: 'Recipient not found' }, { status: 404 })
+    return NextResponse.json({ error: 'Получатель не найден' }, { status: 404 })
   }
 
   if (recipient.status !== 'active') {
-    return NextResponse.json({ error: 'Recipient account is not active' }, { status: 400 })
+    return NextResponse.json({ error: 'Аккаунт получателя неактивен' }, { status: 400 })
   }
 
   // Use admin client to create transaction (trigger will handle balance updates)
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
 
   if (error) {
     console.error('Transfer error:', error)
-    return NextResponse.json({ error: 'Transfer failed' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось выполнить перевод' }, { status: 500 })
   }
 
   return NextResponse.json(transaction, { status: 201 })

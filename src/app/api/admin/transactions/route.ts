@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     .range(offset, offset + limit - 1)
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to fetch transactions' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось загрузить транзакции' }, { status: 500 })
   }
 
   return NextResponse.json({

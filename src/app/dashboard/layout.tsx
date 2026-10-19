@@ -5,6 +5,10 @@ import { LogoutButton } from '@/components/features/logout-button'
 import { NotificationBell } from '@/components/features/notification-bell'
 import { MobileNav } from '@/components/features/mobile-nav'
 import { MobileMenu } from '@/components/features/mobile-menu'
+import { NavLink } from '@/components/ui/nav-link'
+
+const navLinkClass =
+  'text-sm font-medium text-gray-600 hover:text-gray-900 aria-[current=page]:text-primary-600'
 
 export default async function DashboardLayout({
   children,
@@ -40,37 +44,22 @@ export default async function DashboardLayout({
           </Link>
 
           <nav className="hidden items-center gap-6 md:flex">
-            <Link
-              href="/dashboard"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
-            >
+            <NavLink href="/dashboard" exact className={navLinkClass}>
               Главная
-            </Link>
-            <Link
-              href="/dashboard/history"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
-            >
+            </NavLink>
+            <NavLink href="/dashboard/history" className={navLinkClass}>
               История
-            </Link>
-            <Link
-              href="/dashboard/transfer"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
-            >
+            </NavLink>
+            <NavLink href="/dashboard/transfer" className={navLinkClass}>
               Перевод
-            </Link>
-            <Link
-              href="/dashboard/rewards"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
-            >
+            </NavLink>
+            <NavLink href="/dashboard/rewards" className={navLinkClass}>
               Награды
-            </Link>
+            </NavLink>
             {isAdmin && (
-              <Link
-                href="/dashboard/admin/members"
-                className="text-sm font-medium text-primary-600 hover:text-primary-700"
-              >
+              <NavLink href="/dashboard/admin" className={navLinkClass}>
                 Админ
-              </Link>
+              </NavLink>
             )}
           </nav>
 

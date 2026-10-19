@@ -9,7 +9,7 @@ export async function GET() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: 'Требуется вход в аккаунт' }, { status: 401 })
   }
 
   const { data: profile, error } = await supabase
@@ -19,7 +19,7 @@ export async function GET() {
     .single()
 
   if (error) {
-    return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    return NextResponse.json({ error: 'Пользователь не найден' }, { status: 404 })
   }
 
   return NextResponse.json(profile)

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   const validation = awardSchema.safeParse(body)
   if (!validation.success) {
     return NextResponse.json(
-      { error: validation.error.errors[0]?.message ?? 'Invalid input' },
+      { error: validation.error.errors[0]?.message ?? 'Некорректные данные' },
       { status: 400 }
     )
   }
@@ -41,11 +41,11 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   const typedTargetUser = targetUser as { id: string; status: string } | null
 
   if (!typedTargetUser) {
-    return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    return NextResponse.json({ error: 'Пользователь не найден' }, { status: 404 })
   }
 
   if (typedTargetUser.status !== 'active') {
-    return NextResponse.json({ error: 'Cannot award coins to inactive user' }, { status: 400 })
+    return NextResponse.json({ error: 'Нельзя начислить монеты неактивному участнику' }, { status: 400 })
   }
 
   // Use admin client to bypass RLS for creating transaction
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
   if (error) {
     console.error('Award error:', error)
-    return NextResponse.json({ error: 'Failed to award coins' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось начислить монеты' }, { status: 500 })
   }
 
   return NextResponse.json(transaction, { status: 201 })

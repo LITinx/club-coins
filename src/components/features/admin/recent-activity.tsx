@@ -1,5 +1,11 @@
 import { Card } from '@/components/ui/card'
-import type { TransactionWithUsers } from '@/types/database'
+import type { TransactionType, TransactionWithUsers } from '@/types/database'
+
+const typeLabels: Record<TransactionType, string> = {
+  award: 'Начисление',
+  transfer: 'Перевод',
+  redemption: 'Обмен',
+}
 
 interface RecentActivityListProps {
   transactions: TransactionWithUsers[]
@@ -61,7 +67,7 @@ export function RecentActivityList({ transactions }: RecentActivityListProps) {
               <span
                 className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${getTypeStyles(tx.type)}`}
               >
-                {tx.type}
+                {typeLabels[tx.type]}
               </span>
               <div>
                 <p className="text-sm text-gray-900">{getActivityDescription(tx)}</p>

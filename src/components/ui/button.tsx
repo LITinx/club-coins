@@ -12,7 +12,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       'inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 rounded-lg'
 
     const variants = {
-      primary: 'bg-primary-500 text-white hover:bg-primary-600 focus-visible:ring-primary-500',
+      primary: 'bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-600',
       secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-500',
       outline: 'text-black border border-gray-300 bg-transparent hover:bg-gray-50 focus-visible:ring-gray-500',
       ghost: 'hover:bg-gray-100 focus-visible:ring-gray-500',
@@ -54,7 +54,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            Loading...
+            Загрузка...
           </>
         ) : (
           children

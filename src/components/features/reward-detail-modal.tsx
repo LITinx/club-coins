@@ -34,6 +34,7 @@ export function RewardDetailModal({ reward, userBalance, onClose }: RewardDetail
       }
 
       router.push('/dashboard/rewards/success')
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла ошибка')
     } finally {
