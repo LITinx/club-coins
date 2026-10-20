@@ -1,4 +1,5 @@
 import type { TransactionWithUsers } from '@/types/database'
+import { redemptionCode } from '@/lib/redemption-code'
 
 interface TransactionItemProps {
   transaction: TransactionWithUsers
@@ -77,7 +78,7 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
 
   const getTitle = () => {
     if (transaction.type === 'award') {
-      return 'Награда получена'
+      return 'Начисление от клуба'
     }
     if (transaction.type === 'redemption') {
       return `Обменяно: ${transaction.reward?.name ?? 'Награда'}`
@@ -141,6 +142,15 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
         <p className="text-xs text-gray-400 mt-0.5">
           <span className="sm:hidden">{formatDateShort(transaction.created_at)}</span>
           <span className="hidden sm:inline">{formatDate(transaction.created_at)}</span>
+          {isRedemption &&
+            (transaction.fulfilled_at ? (
+              <span> · выдано</span>
+            ) : (
+              <span className="text-primary-700">
+                {' '}
+                · ждёт выдачи, код <span className="font-mono">{redemptionCode(transaction.id)}</span>
+              </span>
+            ))}
         </p>
         {/* Description on mobile - show below if exists and screen is very small */}
         {transaction.description && (

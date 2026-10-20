@@ -56,6 +56,7 @@ export interface Database {
           reward_id: string | null
           description: string | null
           created_at: string
+          fulfilled_at: string | null
         }
         Insert: {
           id?: string
@@ -66,6 +67,7 @@ export interface Database {
           reward_id?: string | null
           description?: string | null
           created_at?: string
+          fulfilled_at?: string | null
         }
         Update: {
           id?: string
@@ -76,6 +78,7 @@ export interface Database {
           reward_id?: string | null
           description?: string | null
           created_at?: string
+          fulfilled_at?: string | null
         }
       }
       rewards: {

@@ -28,12 +28,13 @@ export function RewardDetailModal({ reward, userBalance, onClose }: RewardDetail
         method: 'POST',
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        const data = await response.json()
         throw new Error(data.error ?? 'Не удалось обменять награду')
       }
 
-      router.push('/dashboard/rewards/success')
+      router.push(`/dashboard/rewards/success?id=${data.id}`)
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла ошибка')
