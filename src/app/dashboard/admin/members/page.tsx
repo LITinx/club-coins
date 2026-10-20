@@ -9,14 +9,15 @@ export const metadata = {
 export default async function AdminMembersPage() {
   const supabase = await createClient()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  const { data: members } = await supabase
-    .from('users')
-    .select('*')
-    .order('display_name', { ascending: true })
+  const [
+    {
+      data: { user },
+    },
+    { data: members },
+  ] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.from('users').select('*').order('display_name', { ascending: true }),
+  ])
 
   return (
     <div className="space-y-6">
