@@ -9,12 +9,14 @@ interface User {
 }
 
 interface UserSearchProps {
-  currentUserId: string
+  id?: string
+  // Excluded from results (e.g. the sender of a transfer)
+  currentUserId?: string
   selectedUser: User | null
   onSelect: (user: User | null) => void
 }
 
-export function UserSearch({ currentUserId, selectedUser, onSelect }: UserSearchProps) {
+export function UserSearch({ id, currentUserId, selectedUser, onSelect }: UserSearchProps) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -87,6 +89,8 @@ export function UserSearch({ currentUserId, selectedUser, onSelect }: UserSearch
   return (
     <div ref={containerRef} className="relative">
       <input
+        id={id}
+        aria-label={id ? undefined : 'Поиск участника'}
         type="text"
         inputMode="search"
         value={query}

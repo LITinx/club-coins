@@ -77,15 +77,16 @@ export function RewardForm({ reward }: RewardFormProps) {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="reward-description" className="block text-sm font-medium text-gray-700 mb-1">
               Описание (необязательно)
             </label>
             <textarea
+              id="reward-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Опишите награду..."
               rows={3}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="w-full rounded-lg border border-gray-300 bg-surface px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             />
           </div>
 
@@ -123,14 +124,16 @@ export function RewardForm({ reward }: RewardFormProps) {
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
+            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600" role="alert">
+              {error}
+            </div>
           )}
 
           <div className="flex gap-3">
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.back()}
+              onClick={() => router.push('/dashboard/admin/rewards')}
             >
               Отмена
             </Button>

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { BalanceCard } from '@/components/features/balance-card'
+import { NextReward } from '@/components/features/next-reward'
 import { TransactionList } from '@/components/features/transaction-list'
 import type { User, TransactionWithUsers } from '@/types/database'
 
@@ -48,11 +49,29 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false })
     .limit(5)
 
+  // Cheapest in-stock reward the student can't afford yet
+  const { data: nextReward } = await supabase
+    .from('rewards')
+    .select('name, coin_cost')
+    .eq('is_active', true)
+    .or('inventory.is.null,inventory.gt.0')
+    .gt('coin_cost', typedProfile.balance)
+    .order('coin_cost', { ascending: true })
+    .limit(1)
+    .maybeSingle()
+
   return (
     <div className="mx-auto max-w-xl space-y-10">
       <h1 className="sr-only">С возвращением, {typedProfile.display_name}!</h1>
 
       <BalanceCard balance={typedProfile.balance} />
+
+      {nextReward && (
+        <NextReward
+          balance={typedProfile.balance}
+          reward={nextReward as { name: string; coin_cost: number }}
+        />
+      )}
 
       <section>
         <div className="mb-3 flex items-center justify-between">

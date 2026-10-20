@@ -60,7 +60,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       from_user_id: null,
       to_user_id: targetUserId,
       amount,
-      description: description ?? `Awarded by admin`,
+      description: description ?? null,
     })
     .select()
     .single()

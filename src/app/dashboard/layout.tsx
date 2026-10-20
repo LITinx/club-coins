@@ -79,7 +79,6 @@ export default async function DashboardLayout({
             <MobileMenu
               displayName={typedProfile?.display_name ?? ''}
               balance={typedProfile?.balance ?? 0}
-              isAdmin={isAdmin}
             />
             <div className="hidden sm:block">
               <LogoutButton />

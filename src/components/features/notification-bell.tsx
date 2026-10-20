@@ -35,9 +35,10 @@ export function NotificationBell() {
     return () => clearInterval(interval)
   }, [router])
 
-  const handleMarkAsRead = () => {
-    lastCount.current = 0
-    setUnreadCount(0)
+  const handleMarkAsRead = (all: boolean) => {
+    const next = all ? 0 : Math.max(0, unreadCount - 1)
+    lastCount.current = next
+    setUnreadCount(next)
   }
 
   return (
@@ -45,7 +46,8 @@ export function NotificationBell() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="round-btn relative h-11 w-11"
-        aria-label="Уведомления"
+        aria-label={unreadCount > 0 ? `Уведомления, непрочитанных: ${unreadCount}` : 'Уведомления'}
+        aria-expanded={isOpen}
       >
         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path

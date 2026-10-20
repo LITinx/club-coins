@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/button'
 
 interface ConfirmDialogProps {
@@ -15,6 +16,8 @@ interface ConfirmDialogProps {
 
 // Native <dialog> via showModal() gives focus trapping, Escape and an inert page for free.
 // Bottom sheet on mobile, centered modal on desktop (same look as TransferConfirmModal).
+// Portaled to <body>: inside a space-y-* parent the sibling margin rule beats mt-auto/m-auto
+// and pins the dialog to the top of the screen.
 export function ConfirmDialog({
   title,
   message,
@@ -37,7 +40,7 @@ export function ConfirmDialog({
     if (!isLoading) onCancel()
   }
 
-  return (
+  return createPortal(
     <dialog
       ref={ref}
       aria-labelledby={titleId}
@@ -79,6 +82,7 @@ export function ConfirmDialog({
           </Button>
         </div>
       </div>
-    </dialog>
+    </dialog>,
+    document.body
   )
 }

@@ -27,6 +27,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/dashboard')
   }
 
+  const { count: pendingRedemptions } = await supabase
+    .from('transactions')
+    .select('id', { count: 'exact', head: true })
+    .eq('type', 'redemption')
+    .is('fulfilled_at', null)
+
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Horizontally scrollable admin nav on mobile */}
@@ -37,6 +43,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </NavLink>
           <NavLink href="/dashboard/admin/award" className={tabClass}>
             Начислить монеты
+          </NavLink>
+          <NavLink href="/dashboard/admin/redemptions" className={tabClass}>
+            Выдача
+            {!!pendingRedemptions && (
+              <span className="ml-1.5 rounded-full bg-primary-600 px-1.5 py-0.5 text-xs text-on-primary">
+                {pendingRedemptions}
+              </span>
+            )}
           </NavLink>
           <NavLink href="/dashboard/admin/rewards" className={tabClass}>
             Награды

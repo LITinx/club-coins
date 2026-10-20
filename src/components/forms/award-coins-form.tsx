@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { UserSearch } from '@/components/features/user-search'
 
 interface Member {
   id: string
@@ -13,26 +14,26 @@ interface Member {
 }
 
 interface AwardCoinsFormProps {
-  members: Member[]
   preselectedUser?: Member | null
 }
 
-export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps) {
+export function AwardCoinsForm({ preselectedUser }: AwardCoinsFormProps) {
   const router = useRouter()
-  const [selectedUserId, setSelectedUserId] = useState(preselectedUser?.id ?? '')
+  const [selectedUser, setSelectedUser] = useState<Member | null>(preselectedUser ?? null)
   const [amount, setAmount] = useState('')
   const [description, setDescription] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+  const [lastAward, setLastAward] = useState<{ name: string; amount: number } | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!selectedUser) return
     setError(null)
     setIsLoading(true)
 
     try {
-      const response = await fetch(`/api/admin/members/${selectedUserId}/award`, {
+      const response = await fetch(`/api/admin/members/${selectedUser.id}/award`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,10 +49,10 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
         throw new Error(data.error ?? 'Не удалось начислить монеты')
       }
 
-      setSuccess(true)
+      setLastAward({ name: selectedUser.display_name, amount: parseInt(amount, 10) })
       setAmount('')
       setDescription('')
-      setSelectedUserId('')
+      setSelectedUser(null)
 
       // Refresh the page data
       router.refresh()
@@ -62,7 +63,7 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
     }
   }
 
-  if (success) {
+  if (lastAward) {
     return (
       <Card variant="bordered">
         <CardContent className="py-8 text-center">
@@ -82,8 +83,11 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
             </svg>
           </div>
           <h3 className="mb-2 text-lg font-semibold text-gray-900">Монеты начислены!</h3>
-          <p className="mb-4 text-gray-500">Участник получил уведомление.</p>
-          <Button onClick={() => setSuccess(false)}>Начислить ещё</Button>
+          <p className="mb-4 text-gray-500">
+            {lastAward.name} — монет: {lastAward.amount.toLocaleString('ru-RU')}. Участник получил
+            уведомление.
+          </p>
+          <Button onClick={() => setLastAward(null)}>Начислить ещё</Button>
         </CardContent>
       </Card>
     )
@@ -98,22 +102,9 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="member" className="mb-1.5 block text-sm font-medium text-gray-700">
-              Выберите участника
+              Участник
             </label>
-            <select
-              id="member"
-              value={selectedUserId}
-              onChange={(e) => setSelectedUserId(e.target.value)}
-              className="block w-full rounded-lg border border-gray-300 bg-surface px-3 py-2.5 text-base text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 min-h-[44px] touch-manipulation sm:px-4 sm:text-sm"
-              required
-            >
-              <option value="">Выберите участника...</option>
-              {members.map((member) => (
-                <option key={member.id} value={member.id}>
-                  {member.display_name} ({member.email})
-                </option>
-              ))}
-            </select>
+            <UserSearch id="member" selectedUser={selectedUser} onSelect={setSelectedUser} />
           </div>
 
           <Input
@@ -122,6 +113,8 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
             inputMode="numeric"
             pattern="[0-9]*"
             min="1"
+            max="10000"
+            hint="До 10 000 монет за раз"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Введите количество монет"
@@ -137,10 +130,12 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
           />
 
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
+            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600" role="alert">
+              {error}
+            </div>
           )}
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full" disabled={!selectedUser || isLoading}>
             {isLoading ? 'Начисление...' : 'Начислить монеты'}
           </Button>
         </form>

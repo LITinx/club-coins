@@ -53,8 +53,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
 
   const adminSupabase = createAdminClient()
 
-  // Start a transaction-like operation
-  // 1. Create redemption transaction
+  // Database triggers deduct the balance and decrement inventory atomically
   const { data: transaction, error: txError } = await adminSupabase
     .from('transactions')
     .insert({
@@ -63,26 +62,17 @@ export async function POST(_request: Request, { params }: RouteParams) {
       to_user_id: user.id,
       amount: reward.coin_cost,
       reward_id: reward.id,
-      description: `Redeemed: ${reward.name}`,
     })
     .select()
     .single()
 
   if (txError) {
+    // Raised by decrement_reward_quantity() when someone else took the last item
+    if (txError.message.includes('out of stock')) {
+      return NextResponse.json({ error: 'Награда закончилась' }, { status: 400 })
+    }
     console.error('Redemption transaction error:', txError)
     return NextResponse.json({ error: 'Не удалось обменять награду' }, { status: 500 })
-  }
-
-  // 2. Decrease inventory if applicable
-  if (reward.inventory !== null) {
-    const { error: invError } = await adminSupabase
-      .from('rewards')
-      .update({ inventory: reward.inventory - 1 })
-      .eq('id', rewardId)
-
-    if (invError) {
-      console.error('Inventory update error:', invError)
-    }
   }
 
   return NextResponse.json(transaction, { status: 201 })
