@@ -103,7 +103,8 @@ function ToastContainer({
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+    // Above the floating mobile nav (md:hidden), bottom-right corner on desktop
+    <div className="fixed inset-x-4 bottom-24 z-[60] flex flex-col gap-2 md:inset-x-auto md:bottom-4 md:right-4">
       {toasts.map((toast) => (
         <div
           key={toast.id}
@@ -111,7 +112,7 @@ function ToastContainer({
           role="alert"
         >
           {getToastIcon(toast.type)}
-          <span className="text-sm font-medium">{toast.message}</span>
+          <span className="flex-1 text-sm font-medium">{toast.message}</span>
           <button
             onClick={() => removeToast(toast.id)}
             className="ml-2 opacity-70 hover:opacity-100"

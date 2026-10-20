@@ -1,7 +1,11 @@
 'use client'
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { useToast } from '@/components/ui/toast'
 import type { User, UserRole, UserStatus } from '@/types/database'
 import Link from 'next/link'
 
@@ -10,9 +14,81 @@ const statusLabels: Record<UserStatus, string> = { active: 'Активен', ina
 
 interface MemberListProps {
   members: User[]
+  currentUserId: string
 }
 
-export function MemberList({ members }: MemberListProps) {
+interface PendingAction {
+  member: User
+  kind: 'role' | 'delete'
+}
+
+function dialogCopy({ member, kind }: PendingAction) {
+  const name = <strong className="text-gray-900">{member.display_name}</strong>
+  if (kind === 'delete') {
+    return {
+      title: 'Удалить участника?',
+      message: <>{name} будет удалён без возможности восстановления.</>,
+      confirmLabel: 'Удалить',
+      variant: 'danger' as const,
+    }
+  }
+  if (member.role === 'admin') {
+    return {
+      title: 'Снять права администратора?',
+      message: <>{name} потеряет доступ к админ-панели.</>,
+      confirmLabel: 'Снять права',
+      variant: 'danger' as const,
+    }
+  }
+  return {
+    title: 'Сделать администратором?',
+    message: <>{name} получит доступ к админ-панели и сможет начислять монеты.</>,
+    confirmLabel: 'Сделать админом',
+    variant: 'primary' as const,
+  }
+}
+
+export function MemberList({ members, currentUserId }: MemberListProps) {
+  const router = useRouter()
+  const { addToast } = useToast()
+  const [pending, setPending] = useState<PendingAction | null>(null)
+  const [isWorking, setIsWorking] = useState(false)
+
+  const confirmPending = async () => {
+    if (!pending) return
+    const { member, kind } = pending
+    setIsWorking(true)
+    try {
+      const response =
+        kind === 'delete'
+          ? await fetch(`/api/admin/members/${member.id}`, { method: 'DELETE' })
+          : await fetch(`/api/admin/members/${member.id}/role`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ role: member.role === 'admin' ? 'student' : 'admin' }),
+            })
+
+      if (response.ok) {
+        addToast(
+          kind === 'delete'
+            ? `${member.display_name} удалён`
+            : `Роль ${member.display_name} изменена`,
+          'success'
+        )
+        router.refresh()
+      } else {
+        const data = await response.json().catch(() => null)
+        addToast(data?.error ?? 'Не удалось выполнить действие', 'error')
+      }
+    } catch (error) {
+      console.error('Member action failed:', error)
+      addToast('Не удалось выполнить действие', 'error')
+    } finally {
+      setIsWorking(false)
+      setPending(null)
+    }
+  }
+
   if (members.length === 0) {
     return (
       <Card variant="bordered">
@@ -67,6 +143,24 @@ export function MemberList({ members }: MemberListProps) {
                     Начислить
                   </Button>
                 </Link>
+                {member.id !== currentUserId && (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setPending({ member, kind: 'role' })}
+                    >
+                      {member.role === 'admin' ? 'Снять админа' : 'Сделать админом'}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => setPending({ member, kind: 'delete' })}
+                    >
+                      Удалить
+                    </Button>
+                  </>
+                )}
               </div>
             </li>
           ))}
@@ -114,16 +208,45 @@ export function MemberList({ members }: MemberListProps) {
                 </div>
               </div>
             </div>
-            <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="mt-3 pt-3 border-t border-gray-100 space-y-2">
               <Link href={`/dashboard/admin/award?userId=${member.id}`} className="block">
                 <Button size="sm" variant="outline" className="w-full min-touch-target">
                   Начислить
                 </Button>
               </Link>
+              {member.id !== currentUserId && (
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 min-touch-target"
+                    onClick={() => setPending({ member, kind: 'role' })}
+                  >
+                    {member.role === 'admin' ? 'Снять админа' : 'Сделать админом'}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="danger"
+                    className="flex-1 min-touch-target"
+                    onClick={() => setPending({ member, kind: 'delete' })}
+                  >
+                    Удалить
+                  </Button>
+                </div>
+              )}
             </div>
           </Card>
         ))}
       </div>
+
+      {pending && (
+        <ConfirmDialog
+          {...dialogCopy(pending)}
+          isLoading={isWorking}
+          onConfirm={confirmPending}
+          onCancel={() => setPending(null)}
+        />
+      )}
     </>
   )
 }
