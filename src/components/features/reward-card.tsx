@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import type { Reward } from '@/types/database'
 
 interface RewardCardProps {
@@ -55,13 +56,26 @@ export function RewardCard({ reward, userBalance, onRedeem }: RewardCardProps) {
             )}
           </div>
 
-          <Button
-            className="w-full min-touch-target"
-            disabled={!canAfford || !isAvailable}
-            onClick={() => onRedeem(reward)}
-          >
-            {!isAvailable ? 'Нет в наличии' : !canAfford ? 'Недостаточно монет' : 'Обменять'}
-          </Button>
+          {isAvailable && !canAfford ? (
+            <div className="space-y-2 py-1">
+              <Progress
+                value={userBalance}
+                max={reward.coin_cost}
+                label={`Прогресс до награды «${reward.name}»`}
+              />
+              <p className="text-center text-sm text-gray-600">
+                Не хватает монет: {(reward.coin_cost - userBalance).toLocaleString('ru-RU')}
+              </p>
+            </div>
+          ) : (
+            <Button
+              className="w-full min-touch-target"
+              disabled={!isAvailable}
+              onClick={() => onRedeem(reward)}
+            >
+              {isAvailable ? 'Обменять' : 'Нет в наличии'}
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

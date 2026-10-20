@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 
 export function EmptyHistory() {
@@ -20,9 +21,13 @@ export function EmptyHistory() {
           </svg>
         </div>
         <h3 className="mb-2 text-lg font-semibold text-gray-900">Пока нет транзакций</h3>
-        <p className="text-gray-500">
-          Ваша история транзакций появится здесь, когда вы получите или отправите монеты.
+        <p className="text-gray-500 text-balance">
+          Монеты начисляет администратор клуба за участие в активностях, достижения и помощь
+          клубу. Их также может перевести вам другой участник.
         </p>
+        <Link href="/dashboard/rewards" className="round-btn mx-auto mt-6 h-11 w-fit px-5 text-sm font-medium">
+          Посмотреть награды
+        </Link>
       </CardContent>
     </Card>
   )
