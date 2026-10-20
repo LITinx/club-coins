@@ -15,7 +15,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: 'Требуется вход в аккаунт' }, { status: 401 })
   }
 
   // Get user's balance
@@ -26,7 +26,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
     .single()
 
   if (!userProfile || userProfile.status !== 'active') {
-    return NextResponse.json({ error: 'Account not active' }, { status: 400 })
+    return NextResponse.json({ error: 'Ваш аккаунт неактивен' }, { status: 400 })
   }
 
   // Get reward details
@@ -38,17 +38,17 @@ export async function POST(_request: Request, { params }: RouteParams) {
     .single()
 
   if (!reward) {
-    return NextResponse.json({ error: 'Reward not found' }, { status: 404 })
+    return NextResponse.json({ error: 'Награда не найдена' }, { status: 404 })
   }
 
   // Check inventory
   if (reward.inventory !== null && reward.inventory <= 0) {
-    return NextResponse.json({ error: 'Reward out of stock' }, { status: 400 })
+    return NextResponse.json({ error: 'Награда закончилась' }, { status: 400 })
   }
 
   // Check balance
   if (userProfile.balance < reward.coin_cost) {
-    return NextResponse.json({ error: 'Insufficient balance' }, { status: 400 })
+    return NextResponse.json({ error: 'Недостаточно монет' }, { status: 400 })
   }
 
   const adminSupabase = createAdminClient()
@@ -70,7 +70,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
 
   if (txError) {
     console.error('Redemption transaction error:', txError)
-    return NextResponse.json({ error: 'Failed to process redemption' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось обменять награду' }, { status: 500 })
   }
 
   // 2. Decrease inventory if applicable

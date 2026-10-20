@@ -18,12 +18,12 @@ export function MobileMenu({ displayName, balance, isAdmin }: MobileMenuProps) {
       {/* Hamburger button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex h-10 w-10 items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 min-touch-target touch-manipulation"
+        className="round-btn h-11 w-11"
         aria-label="Открыть меню"
         aria-expanded={isOpen}
       >
         {isOpen ? (
-          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -32,7 +32,7 @@ export function MobileMenu({ displayName, balance, isAdmin }: MobileMenuProps) {
             />
           </svg>
         ) : (
-          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -53,7 +53,7 @@ export function MobileMenu({ displayName, balance, isAdmin }: MobileMenuProps) {
           />
 
           {/* Menu panel */}
-          <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-lg border border-gray-200 bg-white py-2 shadow-lg animate-slide-up">
+          <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-3xl border border-gray-200 bg-surface py-2 shadow-lg animate-slide-up">
             {/* User info */}
             <div className="border-b border-gray-100 px-4 py-3">
               <div className="flex items-center gap-3">

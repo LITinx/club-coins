@@ -1,4 +1,3 @@
-import { Card } from '@/components/ui/card'
 import { TransactionItem } from './transaction-item'
 import { EmptyHistory } from './empty-history'
 import type { TransactionWithUsers } from '@/types/database'
@@ -23,8 +22,7 @@ export function TransactionList({
   }
 
   return (
-    <Card variant="bordered">
-      <ul className="divide-y divide-gray-100">
+    <ul className="space-y-1">
         {transactions.map((transaction) => (
           <TransactionItem
             key={transaction.id}
@@ -32,7 +30,6 @@ export function TransactionList({
             currentUserId={currentUserId}
           />
         ))}
-      </ul>
-    </Card>
+    </ul>
   )
 }

@@ -49,7 +49,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
   }
 
   return (
-    <nav className="flex items-center justify-center gap-1 sm:gap-1" aria-label="Pagination">
+    <nav className="flex items-center justify-center gap-1 sm:gap-1" aria-label="Постраничная навигация">
       <Button
         variant="outline"
         size="sm"

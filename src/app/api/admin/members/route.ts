@@ -16,7 +16,7 @@ export async function GET() {
     .order('display_name', { ascending: true })
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to fetch members' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось загрузить участников' }, { status: 500 })
   }
 
   return NextResponse.json(members)

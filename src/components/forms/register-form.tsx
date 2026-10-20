@@ -11,7 +11,7 @@ export function RegisterForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+  const [confirmEmail, setConfirmEmail] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof RegisterInput, string>>>({})
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -43,7 +43,7 @@ export function RegisterForm() {
 
     // Sign up with Supabase
     const supabase = createClient()
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: result.data.email,
       password: result.data.password,
       options: {
@@ -57,28 +57,30 @@ export function RegisterForm() {
       if (signUpError.message.includes('already registered')) {
         setError('Аккаунт с этим email уже существует')
       } else {
-        setError(signUpError.message)
+        setError('Не удалось создать аккаунт. Попробуйте ещё раз.')
       }
       setIsLoading(false)
       return
     }
 
-    // Check if email confirmation is required
-    setSuccess(true)
-    setIsLoading(false)
+    // No session means Supabase requires email confirmation before the first login
+    if (!signUpData.session) {
+      setConfirmEmail(result.data.email)
+      setIsLoading(false)
+      return
+    }
 
-    // If no email confirmation required, redirect to dashboard
-    setTimeout(() => {
-      router.push('/dashboard')
-      router.refresh()
-    }, 2000)
+    router.push('/dashboard')
+    router.refresh()
   }
 
-  if (success) {
+  if (confirmEmail) {
     return (
       <div className="rounded-lg bg-green-50 p-4 text-center">
-        <p className="font-medium text-green-800">Аккаунт успешно создан!</p>
-        <p className="mt-1 text-sm text-green-600">Перенаправление на панель управления...</p>
+        <p className="font-medium text-green-800">Аккаунт создан!</p>
+        <p className="mt-1 text-sm text-green-700">
+          Мы отправили письмо на {confirmEmail}. Перейдите по ссылке из письма, чтобы войти.
+        </p>
       </div>
     )
   }

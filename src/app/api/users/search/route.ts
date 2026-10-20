@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: 'Требуется вход в аккаунт' }, { status: 401 })
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     .limit(10)
 
   if (error) {
-    return NextResponse.json({ error: 'Search failed' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось выполнить поиск' }, { status: 500 })
   }
 
   return NextResponse.json(users)

@@ -104,7 +104,7 @@ export function AwardCoinsForm({ members, preselectedUser }: AwardCoinsFormProps
               id="member"
               value={selectedUserId}
               onChange={(e) => setSelectedUserId(e.target.value)}
-              className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 min-h-[44px] touch-manipulation sm:px-4 sm:text-sm"
+              className="block w-full rounded-lg border border-gray-300 bg-surface px-3 py-2.5 text-base text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 min-h-[44px] touch-manipulation sm:px-4 sm:text-sm"
               required
             >
               <option value="">Выберите участника...</option>

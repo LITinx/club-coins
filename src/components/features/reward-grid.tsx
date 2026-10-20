@@ -15,7 +15,7 @@ export function RewardGrid({ rewards, userBalance }: RewardGridProps) {
 
   if (rewards.length === 0) {
     return (
-      <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+      <div className="rounded-lg border border-gray-200 bg-surface p-12 text-center">
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
           <svg
             className="h-8 w-8 text-gray-400"

@@ -1,11 +1,11 @@
 {
-  "name": "Club Coins",
-  "short_name": "ClubCoins",
-  "description": "Student club virtual coin rewards system",
+  "name": "Coffee Coin",
+  "short_name": "Coffee Coin",
+  "description": "Система наград студенческого клуба",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#7c3aed",
+  "theme_color": "#b45309",
   "orientation": "portrait",
   "icons": [
     {

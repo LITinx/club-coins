@@ -9,7 +9,7 @@ export async function GET() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: 'Требуется вход в аккаунт' }, { status: 401 })
   }
 
   const { data: rewards, error } = await supabase
@@ -19,7 +19,7 @@ export async function GET() {
     .order('coin_cost', { ascending: true })
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to fetch rewards' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось загрузить награды' }, { status: 500 })
   }
 
   return NextResponse.json(rewards)

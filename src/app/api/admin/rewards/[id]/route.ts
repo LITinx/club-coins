@@ -22,7 +22,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   const validation = rewardUpdateSchema.safeParse(body)
   if (!validation.success) {
     return NextResponse.json(
-      { error: validation.error.errors[0]?.message ?? 'Invalid input' },
+      { error: validation.error.errors[0]?.message ?? 'Некорректные данные' },
       { status: 400 }
     )
   }
@@ -38,7 +38,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
   if (error) {
     console.error('Update reward error:', error)
-    return NextResponse.json({ error: 'Failed to update reward' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось обновить награду' }, { status: 500 })
   }
 
   return NextResponse.json(reward)

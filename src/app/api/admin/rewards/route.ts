@@ -18,7 +18,7 @@ export async function GET() {
     .order('created_at', { ascending: false })
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to fetch rewards' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось загрузить награды' }, { status: 500 })
   }
 
   return NextResponse.json(rewards)
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
   const validation = rewardSchema.safeParse(body)
   if (!validation.success) {
     return NextResponse.json(
-      { error: validation.error.errors[0]?.message ?? 'Invalid input' },
+      { error: validation.error.errors[0]?.message ?? 'Некорректные данные' },
       { status: 400 }
     )
   }
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
   if (error) {
     console.error('Create reward error:', error)
-    return NextResponse.json({ error: 'Failed to create reward' }, { status: 500 })
+    return NextResponse.json({ error: 'Не удалось создать награду' }, { status: 500 })
   }
 
   return NextResponse.json(reward, { status: 201 })

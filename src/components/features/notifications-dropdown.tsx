@@ -76,7 +76,7 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
 
       <div
         ref={dropdownRef}
-        className="fixed inset-x-0 bottom-0 z-50 max-h-[70vh] rounded-t-2xl border-t border-gray-200 bg-white shadow-lg safe-area-inset-bottom animate-slide-up sm:absolute sm:inset-auto sm:right-0 sm:top-12 sm:w-80 sm:rounded-lg sm:border sm:animate-none"
+        className="fixed inset-x-0 bottom-0 z-50 max-h-[70vh] rounded-t-2xl border-t border-gray-200 bg-surface shadow-lg safe-area-inset-bottom animate-slide-up sm:absolute sm:inset-auto sm:right-0 sm:top-12 sm:w-80 sm:rounded-lg sm:border sm:animate-none"
       >
         {/* Mobile drag handle */}
         <div className="flex justify-center py-2 sm:hidden">

@@ -100,7 +100,7 @@ export function UserSearch({ currentUserId, selectedUser, onSelect }: UserSearch
       />
 
       {showDropdown && (query.length >= 2 || results.length > 0) && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">
+        <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-surface shadow-lg">
           {isLoading ? (
             <div className="p-4 text-center text-sm text-gray-500">Поиск...</div>
           ) : results.length === 0 ? (

@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Onest } from 'next/font/google'
 import '@/styles/globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const onest = Onest({ subsets: ['latin', 'cyrillic'], variable: '--font-sans' })
+
+// Runs before paint so a stored/system dark theme doesn't flash light first
+const themeScript = `try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}`
 
 export const metadata: Metadata = {
   title: {
@@ -21,8 +24,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  themeColor: '#7c3aed',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fbf9f4' },
+    { media: '(prefers-color-scheme: dark)', color: '#0b0c0f' },
+  ],
 }
 
 export default function RootLayout({
@@ -31,8 +36,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ru" className={inter.variable}>
-      <body className="min-h-screen bg-gray-50 font-sans antialiased">{children}</body>
+    <html lang="ru" className={onest.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="min-h-screen font-sans antialiased">{children}</body>
     </html>
   )
 }
