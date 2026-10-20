@@ -63,13 +63,13 @@ function ToastContainer({
   const getToastStyles = (type: ToastType) => {
     switch (type) {
       case 'success':
-        return 'bg-green-600'
+        return 'bg-green-600 text-white'
       case 'error':
-        return 'bg-red-600'
+        return 'bg-red-600 text-white'
       case 'warning':
-        return 'bg-yellow-600'
+        return 'bg-yellow-600 text-white'
       default:
-        return 'bg-gray-800'
+        return 'bg-gray-900 text-surface'
     }
   }
 
@@ -107,7 +107,7 @@ function ToastContainer({
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`flex items-center gap-3 rounded-lg px-4 py-3 text-white shadow-lg ${getToastStyles(toast.type)}`}
+          className={`flex items-center gap-3 rounded-2xl px-4 py-3 shadow-lg ${getToastStyles(toast.type)}`}
           role="alert"
         >
           {getToastIcon(toast.type)}

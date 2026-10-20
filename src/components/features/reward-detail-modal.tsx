@@ -45,7 +45,7 @@ export function RewardDetailModal({ reward, userBalance, onClose }: RewardDetail
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:px-4">
       {/* Full-screen sheet on mobile, centered modal on desktop */}
-      <div className="w-full max-h-[90vh] overflow-auto rounded-t-2xl bg-white p-4 shadow-xl safe-area-inset-bottom animate-slide-up sm:max-w-md sm:rounded-xl sm:p-6 sm:animate-none">
+      <div className="w-full max-h-[90vh] overflow-auto rounded-t-2xl bg-surface p-4 shadow-xl safe-area-inset-bottom animate-slide-up sm:max-w-md sm:rounded-xl sm:p-6 sm:animate-none">
         {/* Mobile drag handle */}
         <div className="mb-3 flex justify-center sm:hidden">
           <div className="h-1 w-10 rounded-full bg-gray-300" />

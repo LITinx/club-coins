@@ -5,7 +5,7 @@ interface SkeletonProps {
 export function Skeleton({ className = '' }: SkeletonProps) {
   return (
     <div
-      className={`animate-pulse rounded-lg bg-gray-200 ${className}`}
+      className={`animate-pulse rounded-lg bg-gray-200/70 ${className}`}
       aria-hidden="true"
     />
   )
@@ -13,7 +13,7 @@ export function Skeleton({ className = '' }: SkeletonProps) {
 
 export function CardSkeleton() {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6">
+    <div className="rounded-xl border border-gray-200 bg-surface p-6">
       <Skeleton className="mb-4 h-4 w-24" />
       <Skeleton className="h-8 w-32" />
     </div>
@@ -35,7 +35,7 @@ export function TransactionSkeleton() {
 
 export function TransactionListSkeleton() {
   return (
-    <div className="divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white">
+    <div className="space-y-1">
       {Array.from({ length: 5 }).map((_, i) => (
         <TransactionSkeleton key={i} />
       ))}
@@ -45,7 +45,7 @@ export function TransactionListSkeleton() {
 
 export function RewardCardSkeleton() {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4">
+    <div className="rounded-xl border border-gray-200 bg-surface p-4">
       <Skeleton className="mb-4 h-32 w-full rounded-lg" />
       <Skeleton className="mb-2 h-5 w-3/4" />
       <Skeleton className="mb-4 h-4 w-full" />

@@ -5,6 +5,9 @@ interface TransactionItemProps {
   currentUserId: string
 }
 
+const iconCircle =
+  'flex h-10 w-10 items-center justify-center rounded-full bg-surface shadow-soft ring-1 ring-gray-200/70 dark:bg-gray-100 dark:shadow-none dark:ring-primary-500/10'
+
 export function TransactionItem({ transaction, currentUserId }: TransactionItemProps) {
   const isReceived =
     transaction.type === 'award' ||
@@ -14,7 +17,7 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
   const getIcon = () => {
     if (transaction.type === 'award') {
       return (
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+        <div className={iconCircle}>
           <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -29,7 +32,7 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
 
     if (transaction.type === 'redemption') {
       return (
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
+        <div className={iconCircle}>
           <svg className="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -45,7 +48,7 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
     // Transfer
     if (isReceived) {
       return (
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
+        <div className={iconCircle}>
           <svg className="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -59,7 +62,7 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
     }
 
     return (
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100">
+      <div className={iconCircle}>
         <svg className="h-5 w-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
@@ -106,7 +109,7 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
   const isNegative = isRedemption || (!isReceived && transaction.type === 'transfer')
 
   return (
-    <li className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
+    <li className="flex items-center gap-3 rounded-2xl p-3 transition hover:bg-surface sm:gap-4 dark:hover:bg-gray-100/60">
       {/* Icon - smaller on mobile */}
       <div className="flex-shrink-0 [&>div]:h-8 [&>div]:w-8 sm:[&>div]:h-10 sm:[&>div]:w-10 [&_svg]:h-4 [&_svg]:w-4 sm:[&_svg]:h-5 sm:[&_svg]:w-5">
         {getIcon()}
@@ -126,8 +129,8 @@ export function TransactionItem({ transaction, currentUserId }: TransactionItemP
           </div>
           {/* Amount */}
           <div
-            className={`flex-shrink-0 text-right font-semibold text-sm sm:text-base ${
-              isNegative ? 'text-red-600' : 'text-green-600'
+            className={`flex-shrink-0 text-right font-medium tabular-nums text-sm sm:text-base ${
+              isNegative ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
             }`}
           >
             {isNegative ? '-' : '+'}

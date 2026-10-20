@@ -1,50 +1,53 @@
-import { Card, CardContent } from '@/components/ui/card'
+import Link from 'next/link'
 
 interface BalanceCardProps {
   balance: number
 }
 
+const actions = [
+  { href: '/dashboard/transfer', label: 'Перевести', icon: 'M7 17 17 7M8 7h9v9' },
+  { href: '/dashboard/history', label: 'История', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+  {
+    href: '/dashboard/rewards',
+    label: 'Обменять',
+    icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7',
+    primary: true,
+  },
+]
+
 export function BalanceCard({ balance }: BalanceCardProps) {
   return (
-    <Card className="bg-gradient-to-br from-primary-500 to-primary-600 text-white">
-      <CardContent className="py-6 sm:py-8">
-        <p className="text-sm font-medium text-primary-100">Ваш баланс</p>
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-3xl font-bold sm:text-4xl">{balance.toLocaleString()}</span>
-          <span className="text-base text-primary-100 sm:text-lg">монет</span>
-        </div>
-        {/* Buttons stack vertically on mobile, row on tablet+ */}
-        <div className="mt-4 flex flex-col gap-2 xs:flex-row xs:gap-4">
-          <a
-            href="/dashboard/transfer"
-            className="flex items-center justify-center gap-2 rounded-lg bg-white/20 px-4 py-2.5 text-sm font-medium text-white hover:bg-white/30 active:bg-white/40 min-touch-target touch-manipulation xs:px-3 xs:py-1.5"
+    <section className="flex flex-col items-center pt-6 text-center sm:pt-10">
+      <p className="text-base text-gray-500">Ваш баланс</p>
+      <div className="mt-1 flex items-start gap-2">
+        <span className="text-7xl font-light leading-tight tracking-tighter text-gray-900 tabular-nums sm:text-8xl dark:bg-gradient-to-b dark:from-gray-900 dark:to-primary-500 dark:bg-clip-text dark:text-transparent dark:drop-shadow-[0_0_28px_rgb(var(--primary-500)/0.45)]">
+          {balance.toLocaleString('ru-RU')}
+        </span>
+        <span className="mt-3 text-sm font-medium text-gray-500">монет</span>
+      </div>
+
+      <div className="mt-8 grid w-full max-w-sm grid-cols-3 gap-4 sm:mt-10">
+        {actions.map((action) => (
+          <Link
+            key={action.href}
+            href={action.href}
+            className="group flex flex-col items-center gap-2 text-sm text-gray-600 touch-manipulation"
           >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-              />
-            </svg>
-            Перевод
-          </a>
-          <a
-            href="/dashboard/rewards"
-            className="flex items-center justify-center gap-2 rounded-lg bg-white/20 px-4 py-2.5 text-sm font-medium text-white hover:bg-white/30 active:bg-white/40 min-touch-target touch-manipulation xs:px-3 xs:py-1.5"
-          >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            Обменять
-          </a>
-        </div>
-      </CardContent>
-    </Card>
+            <span
+              className={`aspect-square w-full max-w-[5.5rem] ${
+                action.primary
+                  ? 'flex items-center justify-center rounded-full bg-primary-500 text-gray-900 shadow-soft transition group-hover:bg-primary-400 group-active:scale-95 dark:text-on-primary dark:shadow-glow dark:group-hover:bg-primary-600'
+                  : 'round-btn group-hover:bg-gray-100'
+              }`}
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d={action.icon} />
+              </svg>
+            </span>
+            {action.label}
+          </Link>
+        ))}
+      </div>
+    </section>
   )
 }

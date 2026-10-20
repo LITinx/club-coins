@@ -1,11 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { NotificationsDropdown } from './notifications-dropdown'
 
 export function NotificationBell() {
+  const router = useRouter()
   const [unreadCount, setUnreadCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
+  const lastCount = useRef<number | null>(null)
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
@@ -13,6 +16,11 @@ export function NotificationBell() {
         const response = await fetch('/api/notifications/unread-count')
         if (response.ok) {
           const data = await response.json()
+          // New notification means balance/history changed: drop prefetched pages
+          if (lastCount.current !== null && data.count > lastCount.current) {
+            router.refresh()
+          }
+          lastCount.current = data.count
           setUnreadCount(data.count)
         }
       } catch (error) {
@@ -25,9 +33,10 @@ export function NotificationBell() {
     // Poll for new notifications every 30 seconds
     const interval = setInterval(fetchUnreadCount, 30000)
     return () => clearInterval(interval)
-  }, [])
+  }, [router])
 
   const handleMarkAsRead = () => {
+    lastCount.current = 0
     setUnreadCount(0)
   }
 
@@ -35,10 +44,10 @@ export function NotificationBell() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+        className="round-btn relative h-11 w-11"
         aria-label="Уведомления"
       >
-        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -47,7 +56,7 @@ export function NotificationBell() {
           />
         </svg>
         {unreadCount > 0 && (
-          <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}

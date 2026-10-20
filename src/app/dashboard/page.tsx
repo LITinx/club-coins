@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { BalanceCard } from '@/components/features/balance-card'
@@ -48,31 +49,24 @@ export default async function DashboardPage() {
     .limit(5)
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          С возвращением, {typedProfile.display_name}!
-        </h1>
-      </div>
+    <div className="mx-auto max-w-xl space-y-10">
+      <h1 className="sr-only">С возвращением, {typedProfile.display_name}!</h1>
 
       <BalanceCard balance={typedProfile.balance} />
 
-      <div>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">Последняя активность</h2>
-          <a
-            href="/dashboard/history"
-            className="text-sm font-medium text-primary-600 hover:text-primary-700"
-          >
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-xl text-gray-900">Последняя активность</h2>
+          <Link href="/dashboard/history" className="round-btn h-10 px-4 text-sm font-medium">
             Показать все
-          </a>
+          </Link>
         </div>
         <TransactionList
           transactions={(transactions ?? []) as TransactionWithUsers[]}
           currentUserId={user.id}
           showEmpty
         />
-      </div>
+      </section>
     </div>
   )
 }

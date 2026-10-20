@@ -16,7 +16,7 @@ export function NavLink({ href, exact, className, children }: NavLinkProps) {
   const isActive = exact ? pathname === href : pathname.startsWith(href)
 
   return (
-    <Link href={href} className={className} aria-current={isActive ? 'page' : undefined}>
+    <Link href={href} prefetch className={className} aria-current={isActive ? 'page' : undefined}>
       {children}
     </Link>
   )
