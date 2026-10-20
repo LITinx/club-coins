@@ -51,7 +51,7 @@ describe('DELETE /api/admin/members/[id]', () => {
   })
 
   it('rejects non-admins', async () => {
-    mocks.adminCheck = { error: 'Forbidden: Admin access required', status: 403 }
+    mocks.adminCheck = { error: 'Доступ только для администраторов', status: 403 }
     expect((await deleteMember(MEMBER_ID)).status).toBe(403)
     expect(mocks.deleteUser).not.toHaveBeenCalled()
   })

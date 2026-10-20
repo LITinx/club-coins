@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Onest } from 'next/font/google'
+import { ToastProvider } from '@/components/ui/toast'
 import '@/styles/globals.css'
 
 const onest = Onest({ subsets: ['latin', 'cyrillic'], variable: '--font-sans' })
@@ -40,7 +41,9 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="min-h-screen font-sans antialiased">{children}</body>
+      <body className="min-h-screen font-sans antialiased">
+        <ToastProvider>{children}</ToastProvider>
+      </body>
     </html>
   )
 }

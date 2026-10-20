@@ -14,7 +14,7 @@ export async function checkAdminRole(
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return { error: 'Unauthorized', status: 401 }
+    return { error: 'Требуется вход', status: 401 }
   }
 
   const { data: profile } = await supabase
@@ -26,7 +26,7 @@ export async function checkAdminRole(
   const typedProfile = profile as { role: string } | null
 
   if (!typedProfile || typedProfile.role !== 'admin') {
-    return { error: 'Forbidden: Admin access required', status: 403 }
+    return { error: 'Доступ только для администраторов', status: 403 }
   }
 
   return { status: 200, userId: user.id }

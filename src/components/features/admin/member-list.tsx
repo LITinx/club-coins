@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { useToast } from '@/components/ui/toast'
 import type { User, UserRole, UserStatus } from '@/types/database'
 import Link from 'next/link'
 
@@ -15,44 +17,76 @@ interface MemberListProps {
   currentUserId: string
 }
 
+interface PendingAction {
+  member: User
+  kind: 'role' | 'delete'
+}
+
+function dialogCopy({ member, kind }: PendingAction) {
+  const name = <strong className="text-gray-900">{member.display_name}</strong>
+  if (kind === 'delete') {
+    return {
+      title: 'Удалить участника?',
+      message: <>{name} будет удалён без возможности восстановления.</>,
+      confirmLabel: 'Удалить',
+      variant: 'danger' as const,
+    }
+  }
+  if (member.role === 'admin') {
+    return {
+      title: 'Снять права администратора?',
+      message: <>{name} потеряет доступ к админ-панели.</>,
+      confirmLabel: 'Снять права',
+      variant: 'danger' as const,
+    }
+  }
+  return {
+    title: 'Сделать администратором?',
+    message: <>{name} получит доступ к админ-панели и сможет начислять монеты.</>,
+    confirmLabel: 'Сделать админом',
+    variant: 'primary' as const,
+  }
+}
+
 export function MemberList({ members, currentUserId }: MemberListProps) {
   const router = useRouter()
-  const [busyId, setBusyId] = useState<string | null>(null)
+  const { addToast } = useToast()
+  const [pending, setPending] = useState<PendingAction | null>(null)
+  const [isWorking, setIsWorking] = useState(false)
 
-  const runAction = async (memberId: string, path: string, init: RequestInit) => {
-    setBusyId(memberId)
+  const confirmPending = async () => {
+    if (!pending) return
+    const { member, kind } = pending
+    setIsWorking(true)
     try {
-      const response = await fetch(`/api/admin/members/${memberId}${path}`, init)
+      const response =
+        kind === 'delete'
+          ? await fetch(`/api/admin/members/${member.id}`, { method: 'DELETE' })
+          : await fetch(`/api/admin/members/${member.id}/role`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ role: member.role === 'admin' ? 'student' : 'admin' }),
+            })
+
       if (response.ok) {
+        addToast(
+          kind === 'delete'
+            ? `${member.display_name} удалён`
+            : `Роль ${member.display_name} изменена`,
+          'success'
+        )
         router.refresh()
       } else {
         const data = await response.json().catch(() => null)
-        alert(data?.error ?? 'Не удалось выполнить действие')
+        addToast(data?.error ?? 'Не удалось выполнить действие', 'error')
       }
     } catch (error) {
       console.error('Member action failed:', error)
+      addToast('Не удалось выполнить действие', 'error')
     } finally {
-      setBusyId(null)
+      setIsWorking(false)
+      setPending(null)
     }
-  }
-
-  const handleToggleRole = (member: User) => {
-    const role = member.role === 'admin' ? 'student' : 'admin'
-    const question =
-      role === 'admin'
-        ? `Сделать ${member.display_name} администратором?`
-        : `Снять права администратора с ${member.display_name}?`
-    if (!confirm(question)) return
-    runAction(member.id, '/role', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role }),
-    })
-  }
-
-  const handleDelete = (member: User) => {
-    if (!confirm(`Удалить ${member.display_name}? Это действие нельзя отменить.`)) return
-    runAction(member.id, '', { method: 'DELETE' })
   }
 
   if (members.length === 0) {
@@ -114,16 +148,14 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
                     <Button
                       size="sm"
                       variant="outline"
-                      disabled={busyId === member.id}
-                      onClick={() => handleToggleRole(member)}
+                      onClick={() => setPending({ member, kind: 'role' })}
                     >
                       {member.role === 'admin' ? 'Снять админа' : 'Сделать админом'}
                     </Button>
                     <Button
                       size="sm"
                       variant="danger"
-                      disabled={busyId === member.id}
-                      onClick={() => handleDelete(member)}
+                      onClick={() => setPending({ member, kind: 'delete' })}
                     >
                       Удалить
                     </Button>
@@ -188,8 +220,7 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
                     size="sm"
                     variant="outline"
                     className="flex-1 min-touch-target"
-                    disabled={busyId === member.id}
-                    onClick={() => handleToggleRole(member)}
+                    onClick={() => setPending({ member, kind: 'role' })}
                   >
                     {member.role === 'admin' ? 'Снять админа' : 'Сделать админом'}
                   </Button>
@@ -197,8 +228,7 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
                     size="sm"
                     variant="danger"
                     className="flex-1 min-touch-target"
-                    disabled={busyId === member.id}
-                    onClick={() => handleDelete(member)}
+                    onClick={() => setPending({ member, kind: 'delete' })}
                   >
                     Удалить
                   </Button>
@@ -208,6 +238,15 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
           </Card>
         ))}
       </div>
+
+      {pending && (
+        <ConfirmDialog
+          {...dialogCopy(pending)}
+          isLoading={isWorking}
+          onConfirm={confirmPending}
+          onCancel={() => setPending(null)}
+        />
+      )}
     </>
   )
 }
