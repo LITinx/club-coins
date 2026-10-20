@@ -7,7 +7,11 @@ import { Input } from '@/components/ui/input'
 import { createClient } from '@/lib/supabase/client'
 import { loginSchema, type LoginInput } from '@/lib/validations/auth'
 
-export function LoginForm() {
+interface LoginFormProps {
+  next?: string
+}
+
+export function LoginForm({ next }: LoginFormProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -51,7 +55,8 @@ export function LoginForm() {
       return
     }
 
-    router.push('/dashboard')
+    // Only follow in-app dashboard paths, never an external URL
+    router.push(next?.startsWith('/dashboard') ? next : '/dashboard')
     router.refresh()
   }
 

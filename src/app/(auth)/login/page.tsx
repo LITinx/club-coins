@@ -6,7 +6,13 @@ export const metadata = {
   title: 'Вход',
 }
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: Promise<{ next?: string }>
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { next } = await searchParams
+
   return (
     <Card>
       <CardHeader className="text-center">
@@ -14,7 +20,7 @@ export default function LoginPage() {
         <CardDescription>Войдите в свой аккаунт, чтобы продолжить</CardDescription>
       </CardHeader>
       <CardContent>
-        <LoginForm />
+        <LoginForm next={next} />
         <p className="mt-6 text-center text-sm text-gray-600">
           Нет аккаунта?{' '}
           <Link href="/register" className="font-medium text-primary-600 hover:text-primary-500">
