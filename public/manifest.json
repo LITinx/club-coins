@@ -4,8 +4,8 @@
   "description": "Система наград студенческого клуба",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#b45309",
+  "background_color": "#0b0c0f",
+  "theme_color": "#0b0c0f",
   "orientation": "portrait",
   "icons": [
     {
