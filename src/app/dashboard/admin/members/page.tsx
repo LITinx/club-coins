@@ -9,6 +9,10 @@ export const metadata = {
 export default async function AdminMembersPage() {
   const supabase = await createClient()
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   const { data: members } = await supabase
     .from('users')
     .select('*')
@@ -21,7 +25,7 @@ export default async function AdminMembersPage() {
         <p className="text-gray-600">Просмотр и управление всеми участниками клуба</p>
       </div>
 
-      <MemberList members={(members ?? []) as User[]} />
+      <MemberList members={(members ?? []) as User[]} currentUserId={user?.id ?? ''} />
     </div>
   )
 }

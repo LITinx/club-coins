@@ -14,8 +14,10 @@ interface AdminRewardListProps {
 export function AdminRewardList({ rewards }: AdminRewardListProps) {
   const router = useRouter()
   const [isToggling, setIsToggling] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const handleToggleActive = async (rewardId: string, currentActive: boolean) => {
+    setError(null)
     setIsToggling(rewardId)
     try {
       const response = await fetch(`/api/admin/rewards/${rewardId}`, {
@@ -24,11 +26,14 @@ export function AdminRewardList({ rewards }: AdminRewardListProps) {
         body: JSON.stringify({ is_active: !currentActive }),
       })
 
-      if (response.ok) {
-        router.refresh()
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error ?? 'Не удалось обновить награду')
       }
-    } catch (error) {
-      console.error('Toggle failed:', error)
+
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Произошла ошибка')
     } finally {
       setIsToggling(null)
     }
@@ -49,6 +54,12 @@ export function AdminRewardList({ rewards }: AdminRewardListProps) {
 
   return (
     <>
+      {error && (
+        <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600" role="alert">
+          {error}
+        </div>
+      )}
+
       {/* Desktop: Table-like list view */}
       <Card variant="bordered" className="hidden sm:block">
         <ul className="divide-y divide-gray-100">
