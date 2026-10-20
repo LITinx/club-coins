@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import type { User, UserRole, UserStatus } from '@/types/database'
@@ -10,9 +12,49 @@ const statusLabels: Record<UserStatus, string> = { active: 'Активен', ina
 
 interface MemberListProps {
   members: User[]
+  currentUserId: string
 }
 
-export function MemberList({ members }: MemberListProps) {
+export function MemberList({ members, currentUserId }: MemberListProps) {
+  const router = useRouter()
+  const [busyId, setBusyId] = useState<string | null>(null)
+
+  const runAction = async (memberId: string, path: string, init: RequestInit) => {
+    setBusyId(memberId)
+    try {
+      const response = await fetch(`/api/admin/members/${memberId}${path}`, init)
+      if (response.ok) {
+        router.refresh()
+      } else {
+        const data = await response.json().catch(() => null)
+        alert(data?.error ?? 'Не удалось выполнить действие')
+      }
+    } catch (error) {
+      console.error('Member action failed:', error)
+    } finally {
+      setBusyId(null)
+    }
+  }
+
+  const handleToggleRole = (member: User) => {
+    const role = member.role === 'admin' ? 'student' : 'admin'
+    const question =
+      role === 'admin'
+        ? `Сделать ${member.display_name} администратором?`
+        : `Снять права администратора с ${member.display_name}?`
+    if (!confirm(question)) return
+    runAction(member.id, '/role', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role }),
+    })
+  }
+
+  const handleDelete = (member: User) => {
+    if (!confirm(`Удалить ${member.display_name}? Это действие нельзя отменить.`)) return
+    runAction(member.id, '', { method: 'DELETE' })
+  }
+
   if (members.length === 0) {
     return (
       <Card variant="bordered">
@@ -67,6 +109,26 @@ export function MemberList({ members }: MemberListProps) {
                     Начислить
                   </Button>
                 </Link>
+                {member.id !== currentUserId && (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={busyId === member.id}
+                      onClick={() => handleToggleRole(member)}
+                    >
+                      {member.role === 'admin' ? 'Снять админа' : 'Сделать админом'}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      disabled={busyId === member.id}
+                      onClick={() => handleDelete(member)}
+                    >
+                      Удалить
+                    </Button>
+                  </>
+                )}
               </div>
             </li>
           ))}
@@ -114,12 +176,34 @@ export function MemberList({ members }: MemberListProps) {
                 </div>
               </div>
             </div>
-            <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="mt-3 pt-3 border-t border-gray-100 space-y-2">
               <Link href={`/dashboard/admin/award?userId=${member.id}`} className="block">
                 <Button size="sm" variant="outline" className="w-full min-touch-target">
                   Начислить
                 </Button>
               </Link>
+              {member.id !== currentUserId && (
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 min-touch-target"
+                    disabled={busyId === member.id}
+                    onClick={() => handleToggleRole(member)}
+                  >
+                    {member.role === 'admin' ? 'Снять админа' : 'Сделать админом'}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="danger"
+                    className="flex-1 min-touch-target"
+                    disabled={busyId === member.id}
+                    onClick={() => handleDelete(member)}
+                  >
+                    Удалить
+                  </Button>
+                </div>
+              )}
             </div>
           </Card>
         ))}
