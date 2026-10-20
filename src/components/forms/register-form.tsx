@@ -47,6 +47,9 @@ export function RegisterForm() {
       email: result.data.email,
       password: result.data.password,
       options: {
+        // Confirmation link must land on /auth/callback to exchange the code for a session.
+        // This URL has to be listed under Supabase → Authentication → URL Configuration → Redirect URLs.
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
         data: {
           display_name: result.data.displayName,
         },
