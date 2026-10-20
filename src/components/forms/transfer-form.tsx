@@ -11,6 +11,7 @@ import { TransferConfirmModal } from '@/components/features/transfer-confirm-mod
 interface TransferFormProps {
   currentBalance: number
   currentUserId: string
+  preselectedUser?: SelectedUser | null
 }
 
 interface SelectedUser {
@@ -19,9 +20,9 @@ interface SelectedUser {
   email: string
 }
 
-export function TransferForm({ currentBalance, currentUserId }: TransferFormProps) {
+export function TransferForm({ currentBalance, currentUserId, preselectedUser }: TransferFormProps) {
   const router = useRouter()
-  const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null)
+  const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(preselectedUser ?? null)
   const [amount, setAmount] = useState('')
   const [description, setDescription] = useState('')
   const [showConfirm, setShowConfirm] = useState(false)

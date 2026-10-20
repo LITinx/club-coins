@@ -44,7 +44,10 @@ export async function middleware(request: NextRequest) {
 
   // Protect dashboard routes - redirect to login if not authenticated
   if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    // Come back to the requested page after login (e.g. a scanned QR transfer link)
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('next', request.nextUrl.pathname + request.nextUrl.search)
+    return NextResponse.redirect(loginUrl)
   }
 
   // Redirect logged-in users from auth pages to dashboard
