@@ -9,7 +9,14 @@ interface LogoutButtonProps {
 
 export function LogoutButton({ className }: LogoutButtonProps) {
   return (
-    <Button variant="ghost" size="sm" onClick={() => signOut()} className={className}>
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={() => signOut()}
+      className={className}
+      aria-label="Выйти"
+      title="Выйти"
+    >
       <svg className="mr-2 h-5 w-5 sm:mr-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"

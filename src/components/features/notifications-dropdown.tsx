@@ -1,14 +1,16 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import type { Notification } from '@/types/database'
 
 interface NotificationsDropdownProps {
   onClose: () => void
-  onMarkAsRead: () => void
+  onMarkAsRead: (all: boolean) => void
 }
 
 export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDropdownProps) {
+  const router = useRouter()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -38,8 +40,16 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
       }
     }
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+    }
+
     document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }, [onClose])
 
   const handleMarkAsRead = async (notificationId: string) => {
@@ -48,11 +58,32 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
       setNotifications((prev) =>
         prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
       )
-      onMarkAsRead()
+      onMarkAsRead(false)
     } catch (error) {
       console.error('Failed to mark as read:', error)
     }
   }
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      const response = await fetch('/api/notifications/read-all', { method: 'POST' })
+      if (response.ok) {
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+        onMarkAsRead(true)
+      }
+    } catch (error) {
+      console.error('Failed to mark all as read:', error)
+    }
+  }
+
+  // Every notification is about a transaction, so open the history
+  const handleOpen = (notification: Notification) => {
+    if (!notification.read) handleMarkAsRead(notification.id)
+    onClose()
+    router.push('/dashboard/history')
+  }
+
+  const hasUnread = notifications.some((n) => !n.read)
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -85,15 +116,25 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
 
         <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
           <h3 className="font-semibold text-gray-900">Уведомления</h3>
-          <button
-            onClick={onClose}
-            className="p-2 -mr-2 text-gray-400 hover:text-gray-600 sm:hidden min-touch-target touch-manipulation"
-            aria-label="Закрыть"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-1">
+            {hasUnread && (
+              <button
+                onClick={handleMarkAllAsRead}
+                className="rounded-full px-3 py-1.5 text-sm font-medium text-primary-700 hover:bg-gray-100 touch-manipulation"
+              >
+                Прочитать все
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="p-2 -mr-2 text-gray-400 hover:text-gray-600 sm:hidden min-touch-target touch-manipulation"
+              aria-label="Закрыть"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div className="max-h-[50vh] overflow-y-auto scroll-smooth-touch sm:max-h-96">
@@ -104,17 +145,22 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
           ) : (
             <ul className="divide-y divide-gray-100">
               {notifications.map((notification) => (
-                <li
-                  key={notification.id}
-                  className={`cursor-pointer px-4 py-4 hover:bg-gray-50 active:bg-gray-100 min-touch-target touch-manipulation sm:py-3 ${
-                    !notification.read ? 'bg-blue-50' : ''
-                  }`}
-                  onClick={() => !notification.read && handleMarkAsRead(notification.id)}
-                >
-                  <p className="text-sm text-gray-900">{notification.message}</p>
-                  <p className="mt-1 text-xs text-gray-500">
-                    {formatDate(notification.created_at)}
-                  </p>
+                <li key={notification.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleOpen(notification)}
+                    className={`block w-full px-4 py-4 text-left hover:bg-gray-50 active:bg-gray-100 min-touch-target touch-manipulation sm:py-3 ${
+                      !notification.read ? 'bg-blue-50' : ''
+                    }`}
+                  >
+                    <span className="block text-sm text-gray-900">
+                      {!notification.read && <span className="sr-only">Новое: </span>}
+                      {notification.message}
+                    </span>
+                    <span className="mt-1 block text-xs text-gray-500">
+                      {formatDate(notification.created_at)}
+                    </span>
+                  </button>
                 </li>
               ))}
             </ul>
