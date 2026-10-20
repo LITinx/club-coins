@@ -53,7 +53,7 @@ export default async function TransferPage({ searchParams }: TransferPageProps) 
         </div>
         <Link
           href="/dashboard/receive"
-          className="inline-flex h-10 flex-shrink-0 items-center rounded-lg border border-gray-300 px-4 text-sm font-medium text-gray-900 hover:bg-gray-50"
+          className="inline-flex h-10 flex-shrink-0 items-center rounded-full border border-gray-300 px-4 text-sm font-medium text-gray-900 hover:bg-gray-50"
         >
           Мой QR
         </Link>
