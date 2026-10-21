@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import type { Notification } from '@/types/database'
 
@@ -13,7 +14,6 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
   const router = useRouter()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -34,22 +34,12 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
   }, [])
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        onClose()
-      }
-    }
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
     document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [onClose])
 
   const handleMarkAsRead = async (notificationId: string) => {
@@ -100,15 +90,16 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
     return date.toLocaleDateString('ru-RU')
   }
 
-  return (
+  // Portaled to <body>: the header's backdrop-blur makes it the containing block for fixed
+  // children (which pinned this sheet above the screen on phones), and its stacking context
+  // would put the sheet under the floating bottom nav.
+  // Bottom sheet on phones; from sm up a dropdown under the right end of the header.
+  return createPortal(
     <>
-      {/* Mobile: Full-screen overlay */}
-      <div className="fixed inset-0 z-40 bg-black/20 sm:hidden" onClick={onClose} />
+      {/* Closes on any outside click: dimmed on phones, invisible from sm up */}
+      <div className="fixed inset-0 z-50 bg-black/30 sm:bg-transparent" onClick={onClose} />
 
-      <div
-        ref={dropdownRef}
-        className="fixed inset-x-0 bottom-0 z-50 max-h-[70vh] rounded-t-2xl border-t border-gray-200 bg-surface shadow-lg safe-area-inset-bottom animate-slide-up sm:absolute sm:inset-auto sm:right-0 sm:top-12 sm:w-80 sm:rounded-lg sm:border sm:animate-none"
-      >
+      <div className="fixed inset-x-0 bottom-0 z-50 max-h-[70vh] rounded-t-2xl border-t border-gray-200 bg-surface shadow-lg safe-area-inset-bottom animate-slide-up sm:inset-x-auto sm:bottom-auto sm:right-[max(1rem,calc(50vw-39rem))] sm:top-[5.25rem] sm:w-80 sm:rounded-3xl sm:border sm:animate-none">
         {/* Mobile drag handle */}
         <div className="flex justify-center py-2 sm:hidden">
           <div className="h-1 w-10 rounded-full bg-gray-300" />
@@ -150,7 +141,7 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
                     type="button"
                     onClick={() => handleOpen(notification)}
                     className={`block w-full px-4 py-4 text-left hover:bg-gray-50 active:bg-gray-100 min-touch-target touch-manipulation sm:py-3 ${
-                      !notification.read ? 'bg-blue-50' : ''
+                      !notification.read ? 'bg-primary-50' : ''
                     }`}
                   >
                     <span className="block text-sm text-gray-900">
@@ -167,6 +158,7 @@ export function NotificationsDropdown({ onClose, onMarkAsRead }: NotificationsDr
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }
