@@ -13,7 +13,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   const { id: targetUserId } = await params
   const supabase = await createClient()
 
-  const adminCheck = await checkAdminRole(supabase)
+  const adminCheck = await checkAdminRole(supabase, ['admin', 'volunteer'])
   if (adminCheck.error) {
     return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status })
   }
@@ -34,14 +34,19 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   // Check target user exists
   const { data: targetUser } = await supabase
     .from('users')
-    .select('id, status')
+    .select('id, status, role')
     .eq('id', targetUserId)
     .single()
 
-  const typedTargetUser = targetUser as { id: string; status: string } | null
+  const typedTargetUser = targetUser as { id: string; status: string; role: string } | null
 
   if (!typedTargetUser) {
     return NextResponse.json({ error: 'Пользователь не найден' }, { status: 404 })
+  }
+
+  // Also stops volunteers from awarding themselves or each other
+  if (adminCheck.role === 'volunteer' && typedTargetUser.role !== 'student') {
+    return NextResponse.json({ error: 'Волонтёры могут начислять монеты только студентам' }, { status: 403 })
   }
 
   if (typedTargetUser.status !== 'active') {
