@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import { AwardCoinsForm } from '@/components/forms/award-coins-form'
 
 export const metadata = {
@@ -12,6 +13,20 @@ interface AwardPageProps {
 export default async function AdminAwardPage({ searchParams }: AwardPageProps) {
   const { userId } = await searchParams
   const supabase = await createClient()
+
+  // Also served at /dashboard/award for volunteers, outside the admin layout's guard
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser()
+  const { data: me } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', currentUser?.id ?? '')
+    .single()
+  const role = (me as { role: string } | null)?.role
+  if (role !== 'admin' && role !== 'volunteer') {
+    redirect('/dashboard')
+  }
 
   // Get preselected user if provided
   let preselectedUser = null
