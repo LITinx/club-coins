@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export type UserRole = 'student' | 'admin'
+export type UserRole = 'student' | 'volunteer' | 'admin'
 export type UserStatus = 'active' | 'inactive'
 export type TransactionType = 'award' | 'transfer' | 'redemption'
 export type NotificationType = 'award' | 'transfer_received' | 'transfer_sent' | 'redemption'

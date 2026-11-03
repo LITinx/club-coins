@@ -34,6 +34,7 @@ export default async function DashboardLayout({
 
   const typedProfile = profile as { display_name: string; role: string; balance: number } | null
   const isAdmin = typedProfile?.role === 'admin'
+  const isVolunteer = typedProfile?.role === 'volunteer'
 
   return (
     <div className="min-h-screen">
@@ -56,8 +57,8 @@ export default async function DashboardLayout({
             <NavLink href="/dashboard" exact className={navLinkClass}>
               Главная
             </NavLink>
-            <NavLink href="/dashboard/history" className={navLinkClass}>
-              История
+            <NavLink href="/dashboard/leaderboard" className={navLinkClass}>
+              Рейтинг
             </NavLink>
             <NavLink href="/dashboard/transfer" className={navLinkClass}>
               Перевод
@@ -68,6 +69,11 @@ export default async function DashboardLayout({
             {isAdmin && (
               <NavLink href="/dashboard/admin" className={navLinkClass}>
                 Админ
+              </NavLink>
+            )}
+            {isVolunteer && (
+              <NavLink href="/dashboard/award" className={navLinkClass}>
+                Начислить
               </NavLink>
             )}
           </nav>
@@ -88,7 +94,7 @@ export default async function DashboardLayout({
       </header>
 
       {/* Floating pill navigation (mobile) */}
-      <MobileNav isAdmin={isAdmin} />
+      <MobileNav isAdmin={isAdmin} isVolunteer={isVolunteer} />
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 pb-28 pt-2 sm:pt-6 md:pb-10">{children}</main>

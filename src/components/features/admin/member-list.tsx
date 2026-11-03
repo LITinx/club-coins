@@ -10,7 +10,17 @@ import { useToast } from '@/components/ui/toast'
 import type { User, UserRole, UserStatus } from '@/types/database'
 import Link from 'next/link'
 
-const roleLabels: Record<UserRole, string> = { admin: 'Админ', student: 'Студент' }
+const roleLabels: Record<UserRole, string> = { student: 'Студент', volunteer: 'Волонтёр', admin: 'Админ' }
+const roleBadge: Record<UserRole, string> = {
+  student: 'bg-blue-100 text-blue-800',
+  volunteer: 'bg-orange-100 text-orange-800',
+  admin: 'bg-purple-100 text-purple-800',
+}
+const roleGains: Record<UserRole, string> = {
+  student: 'станет студентом и будет участвовать в рейтинге.',
+  volunteer: 'сможет начислять монеты студентам и не будет участвовать в рейтинге.',
+  admin: 'получит доступ к админ-панели и сможет начислять монеты.',
+}
 const statusLabels: Record<UserStatus, string> = { active: 'Активен', inactive: 'Неактивен' }
 
 interface MemberListProps {
@@ -21,9 +31,10 @@ interface MemberListProps {
 interface PendingAction {
   member: User
   kind: 'role' | 'status' | 'delete'
+  role?: UserRole
 }
 
-function dialogCopy({ member, kind }: PendingAction) {
+function dialogCopy({ member, kind, role = 'student' }: PendingAction) {
   const name = <strong className="text-gray-900">{member.display_name}</strong>
   if (kind === 'delete') {
     return {
@@ -48,29 +59,26 @@ function dialogCopy({ member, kind }: PendingAction) {
           variant: 'primary' as const,
         }
   }
-  if (member.role === 'admin') {
-    return {
-      title: 'Снять права администратора?',
-      message: <>{name} потеряет доступ к админ-панели.</>,
-      confirmLabel: 'Снять права',
-      variant: 'danger' as const,
-    }
-  }
   return {
-    title: 'Сделать администратором?',
-    message: <>{name} получит доступ к админ-панели и сможет начислять монеты.</>,
-    confirmLabel: 'Сделать админом',
-    variant: 'primary' as const,
+    title: `Сменить роль на «${roleLabels[role]}»?`,
+    message: (
+      <>
+        {name} {roleGains[role]}
+        {member.role === 'admin' && ' Доступ к админ-панели будет потерян.'}
+      </>
+    ),
+    confirmLabel: 'Сменить роль',
+    variant: member.role === 'admin' ? ('danger' as const) : ('primary' as const),
   }
 }
 
-function sendAction({ member, kind }: PendingAction) {
+function sendAction({ member, kind, role }: PendingAction) {
   if (kind === 'delete') {
     return fetch(`/api/admin/members/${member.id}`, { method: 'DELETE' })
   }
   const [path, body] =
     kind === 'role'
-      ? ['role', { role: member.role === 'admin' ? 'student' : 'admin' }]
+      ? ['role', { role }]
       : ['status', { status: member.status === 'active' ? 'inactive' : 'active' }]
   return fetch(`/api/admin/members/${member.id}/${path}`, {
     method: 'PATCH',
@@ -149,6 +157,22 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
     </Button>
   )
 
+  // Stays on the current role until the change is confirmed and the list refreshes
+  const roleSelect = (member: User, className = '') => (
+    <select
+      value={member.role}
+      onChange={(e) => setPending({ member, kind: 'role', role: e.target.value as UserRole })}
+      aria-label={`Роль ${member.display_name}`}
+      className={`rounded-2xl border border-gray-300 bg-surface px-3 py-1.5 text-sm text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 ${className}`}
+    >
+      {(Object.keys(roleLabels) as UserRole[]).map((role) => (
+        <option key={role} value={role}>
+          {roleLabels[role]}
+        </option>
+      ))}
+    </select>
+  )
+
   return (
     <div className="space-y-4">
       <Input
@@ -195,11 +219,7 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
                     {statusLabels[member.status]}
                   </span>
                   <span
-                    className={`rounded-full px-2 py-1 text-xs font-medium ${
-                      member.role === 'admin'
-                        ? 'bg-purple-100 text-purple-800'
-                        : 'bg-blue-100 text-blue-800'
-                    }`}
+                    className={`rounded-full px-2 py-1 text-xs font-medium ${roleBadge[member.role]}`}
                   >
                     {roleLabels[member.role]}
                   </span>
@@ -207,13 +227,7 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
                   {member.id !== currentUserId && (
                     <>
                       {statusButton(member)}
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setPending({ member, kind: 'role' })}
-                      >
-                        {member.role === 'admin' ? 'Снять админа' : 'Сделать админом'}
-                      </Button>
+                      {roleSelect(member)}
                       <Button
                         size="sm"
                         variant="danger"
@@ -242,11 +256,7 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
                 <div className="flex items-center gap-2">
                   <p className="font-medium text-gray-900 truncate">{member.display_name}</p>
                   <span
-                    className={`flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-                      member.role === 'admin'
-                        ? 'bg-purple-100 text-purple-800'
-                        : 'bg-blue-100 text-blue-800'
-                    }`}
+                    className={`flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${roleBadge[member.role]}`}
                   >
                     {roleLabels[member.role]}
                   </span>
@@ -278,14 +288,7 @@ export function MemberList({ members, currentUserId }: MemberListProps) {
               </div>
               {member.id !== currentUserId && (
                 <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex-1 min-touch-target"
-                    onClick={() => setPending({ member, kind: 'role' })}
-                  >
-                    {member.role === 'admin' ? 'Снять админа' : 'Сделать админом'}
-                  </Button>
+                  {roleSelect(member, 'flex-1 min-touch-target')}
                   <Button
                     size="sm"
                     variant="danger"

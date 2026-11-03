@@ -5,7 +5,7 @@ import { checkAdminRole } from '@/lib/middleware/admin-check'
 import { z } from 'zod'
 
 const roleSchema = z.object({
-  role: z.enum(['student', 'admin']),
+  role: z.enum(['student', 'volunteer', 'admin']),
 })
 
 interface RouteParams {

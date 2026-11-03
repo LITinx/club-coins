@@ -4,10 +4,12 @@ interface AdminCheckResult {
   error?: string
   status: number
   userId?: string
+  role?: string
 }
 
 export async function checkAdminRole(
-  supabase: any
+  supabase: any,
+  allowedRoles: string[] = ['admin']
 ): Promise<AdminCheckResult> {
   const {
     data: { user },
@@ -25,9 +27,9 @@ export async function checkAdminRole(
 
   const typedProfile = profile as { role: string } | null
 
-  if (!typedProfile || typedProfile.role !== 'admin') {
+  if (!typedProfile || !allowedRoles.includes(typedProfile.role)) {
     return { error: 'Доступ только для администраторов', status: 403 }
   }
 
-  return { status: 200, userId: user.id }
+  return { status: 200, userId: user.id, role: typedProfile.role }
 }
